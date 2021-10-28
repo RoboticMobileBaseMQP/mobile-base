@@ -1,10 +1,45 @@
 <?xml version="1.0"?>
 <robot name="mobile_base" xmlns:xacro="http://ros.org/wiki/xacro">
+  <!--<xacro:macro name="IPS_convert" params="inches" />-->
 
   <xacro:property name="PI" value="3.1415926535897931" />
 
-  <xacro:property name="wheel_radius" value="0.050" />
-  <xacro:property name="wheel_width" value="0.0505" />
+  <xacro:property name="base_dimensions" value=".9 .7 .3" />
+  <xacro:property name="wheel_radius" value="${6*.0254}" />
+  <xacro:property name="wheel_width" value="${4*.0254}" />
+
+  <xacro:macro name="wheel_macro" params="index origin"> <!-- include boolean if left or right wheel-->
+    <joint name="wheel_${index}_joint" type="continuous">
+      <origin xyz="${origin}" rpy="0 0 0" />
+      <parent link="base_link"/>
+      <child link="wheel_${index}" />
+      <axis xyz="0 1 0"/>
+    </joint>
+
+    <link name="wheel_${index}">
+    <visual>
+      <origin xyz="0 0 0" rpy="${PI/2} 0 0" />
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="${PI/2} 0 0"/> <!--might have to rotate if wheel is flipped-->
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+      <mass value="0.3844"/>
+      <!-- Inertia based on cylinder - get from CAD -->
+      <inertia
+        ixx="0.000324824" ixy="0" ixz="0"
+        iyy="0.000480000" iyz="0"
+        izz="0.000324824"/>
+    </inertial>
+  </link>
+  </xacro:macro>
   
   <link name="base_footprint"></link>
 
@@ -16,16 +51,15 @@
 
   <link name="base_link">
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 0" />
+      <origin xyz="0 0 .2" rpy="0 0 0" />
       <geometry>
-        <box size=".9 .7 .48"/>
+        <box size="${base_dimensions}"/>
       </geometry>
-      <material name="yellow" />
     </visual>
     <collision>
       <origin xyz="0 0 0"/>
       <geometry>
-        <box size=".9 .7 .3"/>
+        <box size="${base_dimensions}"/>
       </geometry>
     </collision>
     <inertial>
@@ -38,5 +72,10 @@
         izz="0.074201740"/>
     </inertial>
   </link>
-  
+
+  <xacro:wheel_macro index="0" origin=".4 .4 0"/>
+  <xacro:wheel_macro index="1" origin=".4 -.4 0"/>
+  <xacro:wheel_macro index="2" origin="-.4 -.4 0"/>
+  <xacro:wheel_macro index="3" origin="-.4 .4 0"/>
+
   </robot>
