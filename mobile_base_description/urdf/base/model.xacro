@@ -78,4 +78,17 @@
   <xacro:wheel_macro index="2" origin="-.4 -.4 0"/>
   <xacro:wheel_macro index="3" origin="-.4 .4 0"/>
 
+  <!-- attach arm -->
+  <xacro:include filename="$(find kortex_description)/arms/gen3/7dof/urdf/gen3_macro.xacro"/>
+
+  <xacro:load_arm dof="7" vision="false" prefix="jaco_">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </xacro:load_arm>
+
+  <joint name="arm_to_base_joint" type="fixed">
+    <origin xyz="0 0 .35" rpy="0 0 0" />
+    <parent link="base_link"/>
+    <child link="jaco_base_link" />
+  </joint>
+
   </robot>
