@@ -73,6 +73,7 @@
     </inertial>
   </link>
 
+  <!-- attach wheels -->
   <xacro:wheel_macro index="0" origin=".4 .4 0"/>
   <xacro:wheel_macro index="1" origin=".4 -.4 0"/>
   <xacro:wheel_macro index="2" origin="-.4 -.4 0"/>
@@ -90,5 +91,11 @@
     <parent link="base_link"/>
     <child link="jaco_base_link" />
   </joint>
+
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/</robotNamespace> 
+    </plugin> 
+  </gazebo> 
 
   </robot>
