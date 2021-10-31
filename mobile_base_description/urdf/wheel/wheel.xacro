@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<robot name="mobile_base" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:property name="wheel_radius" value="${6*.0254}" />
+  <xacro:property name="wheel_width" value="${4*.0254}" />
+
+  <xacro:macro name="wheel_macro" params="index parent origin"> <!-- include boolean if left or right wheel-->
+    <joint name="wheel_${index}_joint" type="continuous">
+      <origin xyz="${origin}" rpy="0 0 0" />
+      <parent link="${parent}"/>
+      <child link="wheel_${index}" />
+      <axis xyz="0 1 0"/>
+    </joint>
+
+    <link name="wheel_${index}">
+      <visual>
+        <origin xyz="0 0 0" rpy="${PI/2} 0 0" />
+        <geometry>
+          <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="${PI/2} 0 0"/> <!--might have to rotate if wheel is flipped-->
+        <geometry>
+          <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+        <mass value="0.3844"/>
+        <!-- Inertia based on cylinder - get from CAD -->
+        <inertia
+          ixx="0.000324824" ixy="0" ixz="0"
+          iyy="0.000480000" iyz="0"
+          izz="0.000324824"/>
+      </inertial>
+    </link>
+  </xacro:macro>
+</robot>
