@@ -1,0 +1,11 @@
+<launch>
+  <!-- Load params -->
+  <rosparam file="$(find kortex_control)arms/gen3/7dof/config/joint_position_controllers.yaml" command="load" />
+
+  <!-- Launch controllers -->
+  <node name="kortex_moveit_controller_spawner" pkg="controller_manager" type="spawner" respawn="false" args="joint_state_controller gazebo_ros_control kortex_finger1_controller kortex_finger2_controller" ns="/kortex" />
+  <!-- Launch robot_state_publisher -->
+  <node name="kortex_moveit_robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true">
+    <remap from="joint_states" to="kortex/joint_states" />
+  </node>
+</launch>
