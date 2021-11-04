@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<robot>
+    <gazebo>
+        <self_collide>1</self_collide>
+    </gazebo>
+
+    <gazebo>
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+            <robotNamespace>/</robotNamespace>
+        </plugin>
+    </gazebo>
+
+</robot>

@@ -59,10 +59,6 @@
     <child link="jaco_base_link" />
   </joint>
 
-  <gazebo>
-    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-      <robotNamespace>/</robotNamespace> 
-    </plugin> 
-  </gazebo> 
+  <xacro:include filename="$(find mobile_base_description)/urdf/base/model.gazebo" />
 
   </robot>
