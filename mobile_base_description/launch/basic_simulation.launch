@@ -1,8 +1,9 @@
 <launch>
-	<!-- Convert xacro and put on parameter server -->
-	
+
+	<!-- Convert xacro and put on parameter server -->	
 	<param name="robot_description" command="$(find xacro)/xacro $(find mobile_base_description)/urdf/base/model.xacro" />
-	
+  
+  <!-- Start gazebo world -->
 	<include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="world_name" value="worlds/empty_world.world"/> <!-- Note: the world_name is with respect to GAZEBO_RESOURCE_PATH environmental variable -->
     <arg name="paused" value="false"/>
@@ -10,6 +11,14 @@
     <arg name="gui" value="true"/>
     <arg name="recording" value="false"/>
     <arg name="debug" value="false"/>
+  </include>
+
+  <!-- Launch controllers -->
+  <include file="$(find kortex_moveit_controller)/launch/main.launch" />
+
+  <!-- Launch moveit (only for arm, no gripper) -->
+  <include file="$(find gen3_move_it_config)/launch/move_group.launch">
+    <remap from="joint_states" to="kortex/joint_states" />
   </include>
 	
 	<!-- Spawn the base into Gazebo -->
