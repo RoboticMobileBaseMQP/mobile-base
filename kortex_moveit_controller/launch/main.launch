@@ -1,13 +1,27 @@
 <launch>
-  <!-- Load params -->
-  <rosparam file="$(find kortex_control)arms/gen3/7dof/config/joint_position_controllers.yaml" command="load" />
+  <arg name="prefix" value="jaco_" />
 
-  <!-- Launch controllers -->
-  <node name="kortex_moveit_controller_spawner" pkg="controller_manager" type="spawner" respawn="false" 
-  args="joint_state_controller gen3_joint_trajectory_controller" ns="/kortex" />
-  
-  <!-- Launch robot_state_publisher -->
-  <node name="kortex_moveit_robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true">
-    <remap from="joint_states" to="kortex/joint_states" />
-  </node>
+  <group ns="kortex">
+
+    <!-- Load params -->  
+    <rosparam file="$(find kortex_control)arms/gen3/7dof/config/joint_position_controllers.yaml" command="load" />
+    
+    <!-- Launch controllers -->
+    <node name="kortex_moveit_controller_spawner" pkg="controller_manager" type="spawner" respawn="false" 
+    args="joint_state_controller 
+    $(arg prefix)joint_1_position_controller 
+    $(arg prefix)joint_2_position_controller
+    $(arg prefix)joint_3_position_controller
+    $(arg prefix)joint_4_position_controller
+    $(arg prefix)joint_5_position_controller
+    $(arg prefix)joint_6_position_controller
+    $(arg prefix)joint_7_position_controller" ns="/kortex" />
+    
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+
+    <!-- Launch robot_state_publisher -->
+    <node name="kortex_moveit_robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true">
+      <remap from="joint_states" to="kortex/joint_states" />
+    </node>
+  </group>
 </launch>
