@@ -23,7 +23,7 @@
 
   <!-- Launch controllers -->
   <!-- <include file="$(find kortex_moveit_controller)/launch/main.launch" /> -->
-  <!-- <include file="$(find kortex_moveit_controller)/launch/kortex_copy.launch" /> -->
+  <include file="$(find kortex_moveit_controller)/launch/kortex_copy.launch" />
   <!-- <include file="$(find kortex_gazebo)/" /> -->
 
   <!-- Launch moveit (only for arm, no gripper) -->
