@@ -1,46 +1,54 @@
 <launch>
+  <arg name="start_gazebo" default="true"/>
+  <arg name="gazebo_gui"   default ="true"/>
+  <arg name="start_rviz" default="true"/>
 
-	<include file="$(find gazebo_ros)/launch/empty_world.launch">
+	<include file="$(find gazebo_ros)/launch/empty_world.launch" if="$(arg start_gazebo)">
     <arg name="world_name" value="worlds/empty_world.world"/> <!-- Note: the world_name is with respect to GAZEBO_RESOURCE_PATH environmental variable -->
-    <arg name="paused" value="false"/>
+    <arg name="paused" value="true"/>
     <arg name="use_sim_time" value="true"/>
-    <arg name="gui" value="true"/>
+    <arg name="gui" value="$(arg gazebo_gui)"/>
     <arg name="recording" value="false"/>
     <arg name="debug" value="false"/>
   </include>
 
-  <group ns="/base">
+  <group ns="base">
       <!-- Convert xacro and put on parameter server -->
-    <param name="robot_description" command="$(find xacro)/xacro $(find mobile_base_description)/urdf/base/model.xacro" />
+    <param name="base_description" command="$(find xacro)/xacro $(find mobile_base_description)/urdf/base/model.xacro" />
 
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
-    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+    <!-- <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" /> -->
 
     <!-- SPAWN BASE CONTROLLERS-->
     
     <!-- Spawn the base into Gazebo -->
-    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model mobile_base" />
+    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param base_description -urdf -model mobile_base" />
 
   </group>
 
-  <group ns="/jaco_arm">
+  <!-- Delay before homing the arm -->
+  <arg name="start_delay_seconds" default="10"/>
 
-    <!-- Initial position in Gazebo -->
-    <arg name="x0" default="2"/>
-    <arg name="y0" default="2"/>
-    <arg name="z0" default="0"/>
+  <!-- Initial position in Gazebo -->
+  <arg name="x0" default="2"/>
+  <arg name="y0" default="2"/>
+  <arg name="z0" default="0"/>
 
-    <!-- Arm type -->
-    <arg name="arm" default="gen3"/>
-    <arg name="dof" default="7"/> <!-- Number of degrees of freedom of the arm -->
-    
-    <arg name="prefix" default=""/>
-    <arg name="robot_name" default="my_$(arg arm)"/>
-    <arg name="cyclic_data_publish_rate" default="40"/> <!--Hz-->
+  <!-- Arm type -->
+  <arg name="arm" default="gen3"/>
+  <arg name="dof" default="7"/> <!-- Number of degrees of freedom of the arm -->
+  <arg name="gripper" default="" if="$(eval arg('arm') == 'gen3')"/>
+  
+  <arg name="prefix" default=""/>
+  <arg name="robot_name" default="my_$(arg arm)"/> <!-- DO NOT CHANGE THIS-->
+  <arg name="cyclic_data_publish_rate" default="40"/> <!--Hz-->
+
+  <group ns="$(arg robot_name)">
 
     <!-- Load arm description-->
     <param name="robot_description" command="$(find xacro)/xacro --inorder $(find kortex_description)/robots/$(arg arm).xacro dof:=$(arg dof) sim:=true prefix:=$(arg prefix)" />
 
+    <!-- Spawn arm with specific joint values-->
     <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
     args="-urdf -param robot_description -model $(arg robot_name) -x $(arg x0) -y $(arg y0) -z $(arg z0)
         -robot_namespace $(arg robot_name)
@@ -50,7 +58,7 @@
         -J $(arg prefix)joint_4 -2.00
         -J $(arg prefix)joint_5 0
         -J $(arg prefix)joint_6 -1.00
-        -J $(arg prefix)joint_7 1.57" /> <!--TODO-->
+        -J $(arg prefix)joint_7 1.57" />
 
     <!-- Load controller configuration file from kortex_control package -->
     <rosparam file="$(find kortex_control)/arms/$(arg arm)/$(arg dof)dof/config/joint_position_controllers.yaml" command="load" subst_value="true"/>
@@ -105,7 +113,7 @@
     </test> 
 
     <!-- Start RViz -->
-    <node name="rviz" pkg="rviz" type="rviz" if="$(arg start_rviz)"/> 
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find mobile_base_description)/rviz/separate_models.rviz"/> 
 
   </group>
 </launch>
