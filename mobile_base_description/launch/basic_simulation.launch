@@ -1,8 +1,5 @@
 <launch>
-	<!-- Convert xacro and put on parameter server -->
-	
-	<param name="robot_description" command="$(find xacro)/xacro $(find mobile_base_description)/urdf/base/model.xacro" />
-	
+
 	<include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="world_name" value="worlds/empty_world.world"/> <!-- Note: the world_name is with respect to GAZEBO_RESOURCE_PATH environmental variable -->
     <arg name="paused" value="false"/>
@@ -11,6 +8,9 @@
     <arg name="recording" value="false"/>
     <arg name="debug" value="false"/>
   </include>
+
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
 	
 	<!-- Spawn the base into Gazebo -->
 	<node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model mobile_base" />
