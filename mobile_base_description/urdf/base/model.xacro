@@ -50,7 +50,7 @@
   <xacro:include filename="$(find mobile_base_description)/urdf/base/model.gazebo" />
 
   <!-- Load wheel transmissions-->
-  <xacro:include filename="$(find mobile_base_description)/urdf/base/model_transmission.xacro" />
-  <xacro:load_base_transmissions />
+  <!-- <xacro:include filename="$(find mobile_base_description)/urdf/base/model_transmission.xacro" />
+  <xacro:load_base_transmissions /> -->
 
   </robot>

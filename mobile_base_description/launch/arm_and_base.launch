@@ -42,11 +42,12 @@
   <arg name="prefix" default=""/>
   <arg name="robot_name" default="my_$(arg arm)"/> <!-- DO NOT CHANGE THIS-->
   <arg name="cyclic_data_publish_rate" default="40"/> <!--Hz-->
+      <param name="robot_description" command="$(find xacro)/xacro --inorder $(find kortex_description)/robots/$(arg arm).xacro dof:=$(arg dof) sim:=true prefix:=$(arg prefix)" />
+
 
   <group ns="$(arg robot_name)">
 
     <!-- Load arm description-->
-    <param name="robot_description" command="$(find xacro)/xacro --inorder $(find kortex_description)/robots/$(arg arm).xacro dof:=$(arg dof) sim:=true prefix:=$(arg prefix)" />
 
     <!-- Spawn arm with specific joint values-->
     <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"

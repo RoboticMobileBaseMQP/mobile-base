@@ -34,5 +34,23 @@
           izz="0.000324824"/>
       </inertial>
     </link>
+
+    <transmission name="wheel_${index}_joint_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="wheel_${index}_joint">
+        <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="wheel_${index}_joint_motor">
+        <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    </transmission>
+
+    <gazebo reference="wheel_${index}">
+      <mu1 value="1.0"/>
+      <mu2 value="1.0"/>
+      <kp value="10000000.0" />
+      <fdir1 value="1 0 0" />
+      <turnGravityOff>false</turnGravityOff>
+    </gazebo>
   </xacro:macro>
 </robot>
