@@ -5,8 +5,9 @@
     </gazebo>
 
     <gazebo>
-        <!-- <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-        </plugin> -->
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+            <!-- <robotNamespace>/base</robotNamespace> -->
+        </plugin>
 
         <!-- <plugin name="base_controller" filename="libgazebo_ros_force_based_move.so">
             <commandTopic>base/cmd_vel</commandTopic>
