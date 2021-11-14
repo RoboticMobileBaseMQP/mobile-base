@@ -4,7 +4,7 @@
 
   <xacro:property name="PI" value="3.1415926535897931" />
 
-  <xacro:property name="base_dimensions" value=".9 .7 .3" />
+  <xacro:property name="base_dimensions" value=".9 .7 .3" /> <!-- 35 by 28 by 12-->
   
   <link name="base_footprint"></link>
 
