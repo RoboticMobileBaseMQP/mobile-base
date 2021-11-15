@@ -14,7 +14,7 @@
   </include>
 
   <!-- Load actuator parameters to param server-->  
-  <rosparam file="$(find mobile_base_description)/urdf/base/model_config.yaml" command="load" />
+  <rosparam file="$(find mobile_base_control)/config/model_control.yaml" command="load" />
 
   <group ns="base">
     <!-- Convert xacro and put on parameter server -->
