@@ -37,6 +37,7 @@
     </inertial>
   </link>
 
+
   <!-- Attach wheels -->
   <xacro:include filename="$(find mobile_base_description)/urdf/wheel/wheel.xacro" />
   <xacro:wheel_macro index="1" parent="chassis_link" origin=".4 .4 0"/>
@@ -46,5 +47,42 @@
 
   <!-- Load gazebo file-->
   <xacro:include filename="$(find mobile_base_description)/urdf/base/model.gazebo" />
+
+  <!-- arm holders -->
+  <!-- <xacro:macro name="holding_block" params="index origin">
+    <link name="block_${index}">
+      <visual>
+        <origin xyz="${origin}" rpy="0 0 0" />
+        <geometry>
+          <box size=".1 .1 .1"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz=".1 .1 .1"/>
+        <geometry>
+          <box size="${base_dimensions}"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="1"/>
+        <inertia
+          ixx="0.018819942" ixy="0" ixz="-0.000101519"
+          iyy="0.057333716" iyz="0"
+          izz="0.074201740"/>
+      </inertial>
+    </link>
+
+    <joint name="block_${index}_chassis_joint" type="fixed">
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <parent link="chassis_link"/>
+      <child link="block_${index}" />
+    </joint>
+  </xacro:macro>
+
+  <xacro:holding_block index="1" origin=".08 .08 .35" />
+  <xacro:holding_block index="2" origin="-.08 .08 .35" />
+  <xacro:holding_block index="3" origin="-.08 -.08 .35" />
+  <xacro:holding_block index="4" origin=".08 -.08 .35" /> -->
 
   </robot>

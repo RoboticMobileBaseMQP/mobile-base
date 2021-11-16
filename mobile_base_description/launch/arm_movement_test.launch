@@ -1,12 +1,26 @@
-<launch>
 
-  <!-- Launch arm from kortex_gazebo -->
-  <include file="$(find kortex_gazebo)/launch/spawn_kortex_robot.launch">
-    <arg name="start_rviz" value="true" />
-    <arg name="x0" value="0"/>
-    <arg name="y0" value="0"/>
-    <arg name="z0" value=".5"/>
+
+
+<launch>
+  <arg name="start_gazebo" default="true"/>
+  <arg name="gazebo_gui"   default ="true"/>
+  <arg name="start_rviz" default="true"/>
+
+	<include file="$(find gazebo_ros)/launch/empty_world.launch" if="$(arg start_gazebo)">
+    <arg name="world_name" value="worlds/empty.world"/> <!-- Note: the world_name is with respect to GAZEBO_RESOURCE_PATH environmental variable -->
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="$(arg gazebo_gui)"/>
+    <arg name="recording" value="false"/>
+    <arg name="debug" value="false"/>
+    <arg name="verbose" value="true"/>
   </include>
+
+  <param name="robot_description" command="$(find xacro)/xacro --inorder $(find kortex_description)/robots/gen3.xacro dof:=7 vision:=false"/>
+  <!-- Launch arm from kortex_gazebo -->
+<node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+            args="-urdf -param robot_description -model gen3 -x 1 -y 1 -z 1
+                -robot_namespace my_gen3" />
 
   <!-- LOAD BASE -->
   <!-- Load actuator parameters to param server -->  

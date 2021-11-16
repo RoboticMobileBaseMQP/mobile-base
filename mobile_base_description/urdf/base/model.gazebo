@@ -21,7 +21,7 @@
             <y_velocity_p_gain>5000.0</y_velocity_p_gain>
         </plugin> -->
 
-        <plugin name="object_controller" filename="libgazebo_ros_planar_move.so">
+        <plugin name="base_controller" filename="libgazebo_ros_planar_move.so">
             <commandTopic>cmd_vel</commandTopic>
             <odometryTopic>odom</odometryTopic>
             <odometryFrame>odom</odometryFrame>

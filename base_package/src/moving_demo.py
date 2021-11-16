@@ -7,9 +7,10 @@ import time
 class Move_demo(object):
     def __init__(self):
         rospy.init_node("base_random_move")
-        self.velocity_publisher = rospy.Publisher('/base/cmd_vel', Twist, queue_size=10)
+        self.rate = rospy.Rate(.5)
 
-        # self.wheel_1_publisher = rospy.Publisher('/base/wheel_1_joint_controller/command', Float64, queue_size=1)
+        self.base_publisher = rospy.Publisher('/my_gen3/cmd_vel', Twist, queue_size=10)
+        self.arm_publisher = rospy.Publisher('/base/cmd_vel', Twist, queue_size=10)
 
 
     def back_and_forth(self):
@@ -28,8 +29,9 @@ class Move_demo(object):
             print("publishing to base/cmd_vel")
             vel_msg.linear.x = 3 if forward else -3
             forward = not forward
-            self.velocity_publisher.publish(vel_msg)
-            # self.wheel_1_publisher.publish(10 if forward else -10)
+            self.base_publisher.publish(vel_msg)
+            self.arm_publisher.publish(vel_msg)
+            # self.rate.sleep()
             time.sleep(2)
 
 if __name__ == '__main__':
