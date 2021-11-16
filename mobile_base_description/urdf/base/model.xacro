@@ -4,8 +4,7 @@
 
   <xacro:property name="PI" value="3.1415926535897931" />
 
-  <xacro:property name="base_dimensions" value=".9 .7 .3" />
-  <xacro:property name="arm_prefix" value="jaco_" /> 
+  <xacro:property name="base_dimensions" value=".9 .7 .3" /> <!-- 35 by 28 by 12-->
   
   <link name="base_footprint"></link>
 
@@ -40,30 +39,17 @@
     </inertial>
   </link>
 
-  <!-- attach wheels -->
+  <!-- Attach wheels -->
   <xacro:include filename="$(find mobile_base_description)/urdf/wheel/wheel.xacro" />
-  <xacro:wheel_macro index="0" parent="chassis_link" origin=".4 .4 0"/>
-  <xacro:wheel_macro index="1" parent="chassis_link" origin=".4 -.4 0"/>
-  <xacro:wheel_macro index="2" parent="chassis_link" origin="-.4 -.4 0"/>
-  <xacro:wheel_macro index="3" parent="chassis_link" origin="-.4 .4 0"/>
+  <xacro:wheel_macro index="1" parent="base_link" origin=".4 .4 0"/>
+  <xacro:wheel_macro index="2" parent="base_link" origin=".4 -.4 0"/>
+  <xacro:wheel_macro index="3" parent="base_link" origin="-.4 -.4 0"/>
+  <xacro:wheel_macro index="4" parent="base_link" origin="-.4 .4 0"/>
 
-  <!-- attach arm -->
-  <xacro:include filename="$(find kortex_description)/arms/gen3/7dof/urdf/gen3_macro.xacro"/>
-
-  <xacro:load_arm dof="7" vision="false" prefix="${arm_prefix}">
-    <origin xyz="0 0 0" rpy="0 0 0"/>
-  </xacro:load_arm>
-
-  <joint name="arm_to_base_joint" type="fixed">
-    <origin xyz="0 0 .35" rpy="0 0 0" />
-    <parent link="chassis_link"/>
-    <child link="${arm_prefix}base_link" /> <!-- arm base link -->
-  </joint>
-
+  <!-- Load gazebo file-->
   <xacro:include filename="$(find mobile_base_description)/urdf/base/model.gazebo" />
 
-  <!-- add in transmissions -->
-  <xacro:include filename="$(find kortex_description)/arms/gen3/7dof/urdf/gen3_transmission_macro.xacro"/>
-  <xacro:load_gazebo_arm_transmissions prefix="${arm_prefix}" />
+  <!-- <xacro:include filename="$(find mobile_base_description)/urdf/base/model_transmission.xacro" />
+  <xacro:load_base_transmissions /> -->
 
   </robot>
