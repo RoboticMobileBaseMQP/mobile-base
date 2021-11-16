@@ -1,5 +1,9 @@
 <launch>
 
+	<!-- Convert xacro and put on parameter server -->	
+	<param name="robot_description" command="$(find xacro)/xacro $(find mobile_base_description)/urdf/base/model.xacro" />
+  
+  <!-- Start gazebo world -->
 	<include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="world_name" value="worlds/empty_world.world"/> <!-- Note: the world_name is with respect to GAZEBO_RESOURCE_PATH environmental variable -->
     <arg name="paused" value="false"/>
@@ -14,4 +18,20 @@
 	
 	<!-- Spawn the base into Gazebo -->
 	<node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model mobile_base" />
+
+  <!-- <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" /> -->
+
+  <!-- Launch controllers -->
+  <!-- <include file="$(find kortex_moveit_controller)/launch/main.launch" /> -->
+  <include file="$(find kortex_moveit_controller)/launch/kortex_copy.launch" />
+  <!-- <include file="$(find kortex_gazebo)/" /> -->
+
+  <!-- Launch moveit (only for arm, no gripper) -->
+  <!-- <include file="$(find gen3_move_it_config)/launch/move_group.launch">
+    <arg name="prefix" value="jaco_" />
+    <remap from="joint_states" to="kortex/joint_states" />
+  </include> -->
+
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find mobile_base_description)/rviz/basic_sim.rviz"/> 
+
 </launch>
