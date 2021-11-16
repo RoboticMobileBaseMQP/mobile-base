@@ -5,7 +5,7 @@
     <arg name="start_rviz" value="false" />
     <arg name="x0" value="0"/>
     <arg name="y0" value="0"/>
-    <arg name="z0" value="1"/>
+    <arg name="z0" value=".3"/>
   </include>
 
   <!-- LOAD BASE -->

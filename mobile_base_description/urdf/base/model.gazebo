@@ -6,7 +6,6 @@
 
     <gazebo>
         <!-- <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-            <robotNamespace>/base</robotNamespace>
         </plugin> -->
 
         <!-- <plugin name="base_controller" filename="libgazebo_ros_force_based_move.so">
@@ -23,13 +22,12 @@
         </plugin> -->
 
         <plugin name="object_controller" filename="libgazebo_ros_planar_move.so">
-            <!-- <robotNamespace>/base</robotNamespace> -->
             <commandTopic>cmd_vel</commandTopic>
             <odometryTopic>odom</odometryTopic>
             <odometryFrame>odom</odometryFrame>
             <odometryRate>20.0</odometryRate>
             <robotBaseFrame>base_footprint</robotBaseFrame>
-            </plugin>
+        </plugin>
     </gazebo>
 
 </robot>
