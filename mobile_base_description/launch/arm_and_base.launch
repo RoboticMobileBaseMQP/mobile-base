@@ -16,7 +16,7 @@
   <rosparam file="$(find mobile_base_control)/config/model_control.yaml" command="load" />
 
   <group ns="base">
-      <!-- Convert xacro and put on parameter server -->
+    <!-- Convert xacro and put on parameter server -->
     <param name="robot_description" command="$(find xacro)/xacro $(find mobile_base_description)/urdf/base/model.xacro" />
 
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
@@ -31,7 +31,7 @@
                         wheel_4_joint_controller" />
 
     <!-- Spawn the base into Gazebo -->
-    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param base_description -urdf -model mobile_base" />
+    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model mobile_base" />
 
   </group>
 
@@ -125,7 +125,7 @@
     </test> 
 
     <!-- Start RViz -->
-    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find mobile_base_description)/rviz/separate_models.rviz"/> 
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find mobile_base_description)/rviz/separate_models.rviz" if="$(arg start_rviz)"/> 
 
   </group>
 </launch>
