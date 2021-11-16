@@ -41,15 +41,12 @@
 
   <!-- Attach wheels -->
   <xacro:include filename="$(find mobile_base_description)/urdf/wheel/wheel.xacro" />
-  <xacro:wheel_macro index="1" parent="base_link" origin=".4 .4 0"/>
-  <xacro:wheel_macro index="2" parent="base_link" origin=".4 -.4 0"/>
-  <xacro:wheel_macro index="3" parent="base_link" origin="-.4 -.4 0"/>
-  <xacro:wheel_macro index="4" parent="base_link" origin="-.4 .4 0"/>
+  <xacro:wheel_macro index="1" parent="chassis_link" origin=".4 .4 0"/>
+  <xacro:wheel_macro index="2" parent="chassis_link" origin=".4 -.4 0"/>
+  <xacro:wheel_macro index="3" parent="chassis_link" origin="-.4 -.4 0"/>
+  <xacro:wheel_macro index="4" parent="chassis_link" origin="-.4 .4 0"/>
 
   <!-- Load gazebo file-->
   <xacro:include filename="$(find mobile_base_description)/urdf/base/model.gazebo" />
-
-  <!-- <xacro:include filename="$(find mobile_base_description)/urdf/base/model_transmission.xacro" />
-  <xacro:load_base_transmissions /> -->
 
   </robot>
