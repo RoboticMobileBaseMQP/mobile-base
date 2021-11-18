@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+
+<robot name="kortex_insert" xmlns:xacro="http://ros.org/wiki/xacro">
+
+    <xacro:include filename="$(find kortex_description)/robots/gen3.xacro"/>
+<!-- 
+    <joint name="insert_link_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="base_link"/>
+    <child link="insert_link" />
+  </joint>
+
+  <link name="insert_link">
+    <visual>
+      <origin xyz="0 0 -.2" rpy="0 0 0" />
+      <geometry>
+        <box size=".2 .2 .2"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 -.2"/>
+      <geometry>
+        <box size=".2 .2 .2"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin xyz="-0.01103 0 0.002" rpy="0 0 0"/>
+      <mass value="2.844"/>
+      <inertia
+        ixx="0.018819942" ixy="0" ixz="-0.000101519"
+        iyy="0.057333716" iyz="0"
+        izz="0.074201740"/>
+    </inertial>
+  </link> -->
+
+    <gazebo>
+        <plugin name="kortex_controller" filename="libgazebo_ros_planar_move.so">
+            <commandTopic>cmd_vel</commandTopic>
+            <odometryTopic>odom</odometryTopic>
+            <odometryFrame>odom</odometryFrame>
+            <odometryRate>20.0</odometryRate>
+            <robotBaseFrame>base_link</robotBaseFrame>
+        </plugin>
+    </gazebo>
+</robot>
