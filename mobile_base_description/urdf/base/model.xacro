@@ -4,7 +4,9 @@
 
   <xacro:property name="base_dimensions" value=".9 .7 .3" /> <!-- 35 by 28 by 12 inches-->
   
-  <link name="base_footprint"></link>
+  <link name="world" />
+  
+  <link name="base_footprint" />
 
   <joint name="chassis_link_joint" type="fixed">
     <origin xyz="0 0 0.05" rpy="0 0 0" />
@@ -48,41 +50,23 @@
   <!-- Load gazebo file-->
   <xacro:include filename="$(find mobile_base_description)/urdf/base/model.gazebo" />
 
-  <!-- arm holders -->
-  <!-- <xacro:macro name="holding_block" params="index origin">
-    <link name="block_${index}">
-      <visual>
-        <origin xyz="${origin}" rpy="0 0 0" />
-        <geometry>
-          <box size=".1 .1 .1"/>
-        </geometry>
-      </visual>
-      <collision>
-        <origin xyz=".1 .1 .1"/>
-        <geometry>
-          <box size="${base_dimensions}"/>
-        </geometry>
-      </collision>
-      <inertial>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-        <mass value="1"/>
-        <inertia
-          ixx="0.018819942" ixy="0" ixz="-0.000101519"
-          iyy="0.057333716" iyz="0"
-          izz="0.074201740"/>
-      </inertial>
-    </link>
+  <!-- Load world prismatic joints-->
+  <joint name="base_x_joint" type="prismatic">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="world"/>
+    <child link="base_footprint" />
+    <axis xyz="1 0 0"/>
+    <limit effort="1000.0" lower="-0.2" upper="0.2" velocity="0.5"/>
+  </joint>
 
-    <joint name="block_${index}_chassis_joint" type="fixed">
-      <origin xyz="0 0 0" rpy="0 0 0" />
-      <parent link="chassis_link"/>
-      <child link="block_${index}" />
+  <transmission name="base_x_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="base_x_joint">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
-  </xacro:macro>
-
-  <xacro:holding_block index="1" origin=".08 .08 .35" />
-  <xacro:holding_block index="2" origin="-.08 .08 .35" />
-  <xacro:holding_block index="3" origin="-.08 -.08 .35" />
-  <xacro:holding_block index="4" origin=".08 -.08 .35" /> -->
+    <actuator name="base_x_joint_motor">
+        <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
 
   </robot>

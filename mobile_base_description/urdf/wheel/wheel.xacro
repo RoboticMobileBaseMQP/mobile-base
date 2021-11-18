@@ -13,13 +13,13 @@
 
     <link name="wheel_${index}">
       <visual>
-        <origin xyz="${origin}" rpy="0 0 ${PI/2}" />
+        <origin xyz="0 0 0" rpy="0 0 ${PI/2}" />
         <geometry>
           <mesh filename="$(find mobile_base_description)/meshes/mecanum_wheel.STL" scale="0.001 0.001 0.001"/>
         </geometry>
       </visual>
       <collision>
-        <origin xyz="${origin}" rpy="${PI/2} 0 0"/> <!--might have to rotate if wheel is flipped-->
+        <origin xyz="0 0 0" rpy="${PI/2} 0 0"/> <!--might have to rotate if wheel is flipped-->
         <geometry>
           <cylinder radius="${wheel_radius}" length="${wheel_width}"/>
         </geometry>
@@ -35,7 +35,7 @@
       </inertial>
     </link>
 
-    <transmission name="wheel_${index}_joint_transmission">
+    <!-- <transmission name="wheel_${index}_joint_transmission">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="wheel_${index}_joint">
         <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
@@ -51,6 +51,6 @@
       <kp value="10000000.0" />
       <fdir1 value="1 0 0" />
       <turnGravityOff>false</turnGravityOff>
-    </gazebo>
+    </gazebo> -->
   </xacro:macro>
 </robot>

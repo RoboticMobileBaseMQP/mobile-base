@@ -12,6 +12,8 @@ class Move_demo(object):
         self.base_publisher = rospy.Publisher('/my_gen3/cmd_vel', Twist, queue_size=10)
         self.arm_publisher = rospy.Publisher('/base/cmd_vel', Twist, queue_size=10)
 
+        self.base_x_publisher = rospy.Publisher('/base/base_x_joint_controller/command', Float64, queue_size=10)
+
 
     def back_and_forth(self):
         vel_msg = Twist()
@@ -29,8 +31,9 @@ class Move_demo(object):
             print("publishing to base/cmd_vel")
             vel_msg.linear.x = 3 if forward else -3
             forward = not forward
-            self.base_publisher.publish(vel_msg)
-            self.arm_publisher.publish(vel_msg)
+            # self.base_publisher.publish(vel_msg)
+            # self.arm_publisher.publish(vel_msg)
+            self.base_x_publisher.publish(500 if forward else -500)
             # self.rate.sleep()
             time.sleep(2)
 
