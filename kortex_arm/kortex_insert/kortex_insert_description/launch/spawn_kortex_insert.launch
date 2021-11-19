@@ -9,7 +9,7 @@
     <!-- Initial position in Gazebo -->
     <arg name="x0" default="0"/>
     <arg name="y0" default="0"/>
-    <arg name="z0" default="0"/>
+    <arg name="z0" default="1"/>
 
     <!-- Arm type -->
     <arg name="arm" default="gen3"/>
@@ -38,8 +38,11 @@
             <arg name="paused" value="$(arg paused)"/>
     </include>
 
+    <!-- Load actuator parameters to param server-->  
+    <rosparam file="$(find kortex_insert_control)/config/kortex_insert_control.yaml" command="load" />
+
     <!-- Delay before homing the arm -->
-    <arg name="start_delay_seconds" default="10"/>
+    <arg name="start_delay_seconds" default="3"/>
 
     <group ns="$(arg robot_name)">
 
@@ -88,7 +91,10 @@
 
         <!-- Without gripper -->
         <node name="$(arg prefix)$(arg arm)_trajectory_controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
-            output="screen" args="$(arg prefix)$(arg arm)_joint_trajectory_controller $(arg prefix)joint_state_controller"
+            output="screen" args="$(arg prefix)$(arg arm)_joint_trajectory_controller $(arg prefix)joint_state_controller
+            kortex_x_joint_controller
+            kortex_y_joint_controller
+            kortex_z_joint_controller"
             if="$(eval not arg('gripper'))"/>
 
         <!-- With gripper -->

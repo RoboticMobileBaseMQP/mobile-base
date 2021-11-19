@@ -9,12 +9,17 @@ class Move_demo(object):
         rospy.init_node("base_random_move")
         self.rate = rospy.Rate(.5)
 
-        self.base_publisher = rospy.Publisher('/my_gen3/cmd_vel', Twist, queue_size=10)
-        self.arm_publisher = rospy.Publisher('/base/cmd_vel', Twist, queue_size=10)
+        # self.base_publisher = rospy.Publisher('/my_gen3/cmd_vel', Twist, queue_size=10)
+        # self.arm_publisher = rospy.Publisher('/base/cmd_vel', Twist, queue_size=10)
 
-        self.base_x_publisher = rospy.Publisher('/base/base_x_joint_controller/command', Float64, queue_size=10)
-        self.base_y_publisher = rospy.Publisher('/base/base_y_joint_controller/command', Float64, queue_size=10)
-        self.base_z_publisher = rospy.Publisher('/base/base_z_joint_controller/command', Float64, queue_size=10)
+        base_controller_str = "/base/base_{0}_joint_controller/command"
+        arm_controller_str = "/my_gen3/kortex_{0}_joint_controller/command"
+
+        controller_str = arm_controller_str
+
+        self.x_publisher = rospy.Publisher(controller_str.format('x'), Float64, queue_size=10)
+        self.y_publisher = rospy.Publisher(controller_str.format('y'), Float64, queue_size=10)
+        self.z_publisher = rospy.Publisher(controller_str.format('z'), Float64, queue_size=10)
 
 
     def back_and_forth(self):
@@ -35,11 +40,11 @@ class Move_demo(object):
             forward = not forward
             # self.base_publisher.publish(vel_msg)
             # self.arm_publisher.publish(vel_msg)
-            self.base_x_publisher.publish(500 if forward else -500)
-            time.sleep(1)
-            self.base_y_publisher.publish(500 if forward else -500)
-            time.sleep(1)
-            self.base_z_publisher.publish(500 if forward else -500)
+            self.x_publisher.publish(500 if forward else -500)
+            # time.sleep(1)
+            self.y_publisher.publish(500 if forward else -500)
+            # time.sleep(1)
+            self.z_publisher.publish(500 if forward else -500)
             # self.rate.sleep()
             time.sleep(1)
 
