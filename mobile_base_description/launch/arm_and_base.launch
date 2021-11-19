@@ -1,11 +1,11 @@
 <launch>
 
   <!-- Launch arm from kortex_gazebo -->
-  <include file="$(find kortex_gazebo)/launch/spawn_kortex_robot.launch">
-    <arg name="start_rviz" value="true" />
+  <include file="$(find kortex_insert_description)/launch/spawn_kortex_insert.launch">
+    <arg name="start_rviz" value="false" />
     <arg name="x0" value="0"/>
     <arg name="y0" value="0"/>
-    <arg name="z0" value=".5"/>
+    <arg name="z0" value="1"/>
   </include>
 
   <!-- LOAD BASE -->

@@ -61,7 +61,7 @@
     </joint>
 
     <xacro:if value="${child != 'base_footprint'}">
-      <link name="${axis_name}_link">
+      <link name="base_${axis_name}_link">
         <inertial>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <mass value="1" />
@@ -84,9 +84,9 @@
     </transmission>
   </xacro:macro>
 
-  <xacro:prismatic_joint_macro axis_name="x" xyz="1 0 0" parent="world" child="x_link"/>
-  <xacro:prismatic_joint_macro axis_name="y" xyz="0 1 0" parent="x_link" child="y_link"/>
-  <xacro:prismatic_joint_macro axis_name="z" xyz="0 0 1" parent="y_link" child="base_footprint"/>
+  <xacro:prismatic_joint_macro axis_name="x" xyz="1 0 0" parent="world" child="base_x_link"/>
+  <xacro:prismatic_joint_macro axis_name="y" xyz="0 1 0" parent="base_x_link" child="base_y_link"/>
+  <xacro:prismatic_joint_macro axis_name="z" xyz="0 0 1" parent="base_y_link" child="base_footprint"/>
 
 
   </robot>

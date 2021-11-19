@@ -46,7 +46,7 @@
     </joint>
 
     <xacro:if value="${child != 'base_link'}">
-      <link name="${axis_name}_link">
+      <link name="arm_${axis_name}_link">
         <inertial>
         <origin xyz="0 0 0" rpy="0 0 0" />
         <mass value="1" />
@@ -69,9 +69,9 @@
     </transmission>
   </xacro:macro>
 
-  <xacro:prismatic_joint_macro axis_name="x" xyz="1 0 0" parent="world" child="x_link"/>
-  <xacro:prismatic_joint_macro axis_name="y" xyz="0 1 0" parent="x_link" child="y_link"/>
-  <xacro:prismatic_joint_macro axis_name="z" xyz="0 0 1" parent="y_link" child="base_link"/>
+  <xacro:prismatic_joint_macro axis_name="x" xyz="1 0 0" parent="world" child="arm_x_link"/>
+  <xacro:prismatic_joint_macro axis_name="y" xyz="0 1 0" parent="arm_x_link" child="arm_y_link"/>
+  <xacro:prismatic_joint_macro axis_name="z" xyz="0 0 1" parent="arm_y_link" child="base_link"/>
 
 
   <gazebo>
