@@ -17,13 +17,13 @@
   <!-- chassis link -->
   <link name="chassis_link">
     <visual>
-      <origin xyz="0 0 .2" rpy="0 0 0" />
+      <origin xyz="0 0 .3" rpy="0 0 0" />
       <geometry>
         <box size="${base_dimensions}"/>
       </geometry>
     </visual>
     <collision>
-      <origin xyz="0 0 .2"/>
+      <origin xyz="0 0 .3"/>
       <geometry>
         <box size="${base_dimensions}"/>
       </geometry>
@@ -42,31 +42,51 @@
 
   <!-- Attach wheels -->
   <xacro:include filename="$(find mobile_base_description)/urdf/wheel/wheel.xacro" />
-  <xacro:wheel_macro index="1" parent="chassis_link" origin=".4 .4 0"/>
-  <xacro:wheel_macro index="2" parent="chassis_link" origin=".4 -.4 0"/>
-  <xacro:wheel_macro index="3" parent="chassis_link" origin="-.4 -.4 0"/>
-  <xacro:wheel_macro index="4" parent="chassis_link" origin="-.4 .4 0"/>
+  <xacro:wheel_macro index="1" parent="chassis_link" origin=".4 .4 .08"/>
+  <xacro:wheel_macro index="2" parent="chassis_link" origin=".4 -.4 .08"/>
+  <xacro:wheel_macro index="3" parent="chassis_link" origin="-.4 -.4 .08"/>
+  <xacro:wheel_macro index="4" parent="chassis_link" origin="-.4 .4 .08"/>
 
   <!-- Load gazebo file-->
   <xacro:include filename="$(find mobile_base_description)/urdf/base/model.gazebo" />
 
   <!-- Load world prismatic joints-->
-  <joint name="base_x_joint" type="prismatic">
-    <origin xyz="0 0 0" rpy="0 0 0" />
-    <parent link="world"/>
-    <child link="base_footprint" />
-    <axis xyz="1 0 0"/>
-    <limit effort="1000.0" lower="-0.2" upper="0.2" velocity="0.5"/>
-  </joint>
-
-  <transmission name="base_x_transmission">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="base_x_joint">
-        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+  <xacro:macro name="prismatic_joint_macro" params="axis_name xyz parent child">
+    <joint name="base_${axis_name}_joint" type="prismatic">
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <parent link="${parent}"/>
+      <child link="${child}" />
+      <axis xyz="${xyz}"/>
+      <limit effort="1000.0" lower="-0.2" upper="0.2" velocity="0.5"/>
     </joint>
-    <actuator name="base_x_joint_motor">
-        <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
+
+    <xacro:if value="${child != 'base_footprint'}">
+      <link name="${axis_name}_link">
+        <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <mass value="1" />
+        <inertia
+          ixx="1.0" ixy="0.0" ixz="0.0"
+          iyy="1.0" iyz="0.0"
+          izz="1.0" />
+        </inertial>
+      </link>
+    </xacro:if>
+
+    <transmission name="base_${axis_name}_transmission">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="base_${axis_name}_joint">
+          <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="base_${axis_name}_joint_motor">
+          <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+  </xacro:macro>
+
+  <xacro:prismatic_joint_macro axis_name="x" xyz="1 0 0" parent="world" child="x_link"/>
+  <xacro:prismatic_joint_macro axis_name="y" xyz="0 1 0" parent="x_link" child="y_link"/>
+  <xacro:prismatic_joint_macro axis_name="z" xyz="0 0 1" parent="y_link" child="base_footprint"/>
+
 
   </robot>
