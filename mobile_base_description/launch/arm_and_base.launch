@@ -16,17 +16,16 @@
     <!-- Convert xacro and put on parameter server -->
     <param name="robot_description" command="$(find xacro)/xacro $(find mobile_base_description)/urdf/base/model.xacro" />
 
-    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
-    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
-
     <!-- SPAWN BASE CONTROLLERS-->
     <node name="base_controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
-    output="screen" args="joint_state_controller
-                        wheel_1_joint_controller
-                        wheel_2_joint_controller
-                        wheel_3_joint_controller
-                        wheel_4_joint_controller" />
-
+      output="screen" ns="/base" args="joint_state_controller 
+                                      base_x_joint_controller
+                                      base_y_joint_controller
+                                      base_z_joint_controller" />
+    
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+    
     <!-- Spawn the base into Gazebo -->
     <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model mobile_base" />
 
