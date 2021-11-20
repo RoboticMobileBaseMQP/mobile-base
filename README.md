@@ -12,5 +12,5 @@ The mobile base also requires ros-kortex for simulating the robotic arm. Follow 
 
 This simulation is still in early development. To run the simulation with both the base and arm, launch the following command in a terminal:
 
-`roslaunch mobile_base_description arm_and_base.launch`
+`roslaunch mobile_base_simulation arm_and_base.launch`
 
