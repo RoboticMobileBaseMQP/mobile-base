@@ -31,7 +31,7 @@ class Move_demo(object):
         while not rospy.is_shutdown():
             print("publishing velocity")
 
-            value = 1000 if value==1000 else -1000
+            value = 1000 if value==-1000 else -1000
 
             self.base_controllers[3].publish(value)
             self.arm_controllers[3].publish(value)
