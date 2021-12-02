@@ -94,7 +94,8 @@
             output="screen" args="$(arg prefix)$(arg arm)_joint_trajectory_controller $(arg prefix)joint_state_controller
             kortex_x_joint_controller
             kortex_y_joint_controller
-            kortex_z_joint_controller"
+            kortex_z_joint_controller
+            kortex_z_rotation_controller"
             if="$(eval not arg('gripper'))"/>
 
         <!-- With gripper -->
