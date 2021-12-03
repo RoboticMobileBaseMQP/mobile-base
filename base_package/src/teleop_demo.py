@@ -48,7 +48,6 @@ class TeleOpDemo(threading.Thread):
         self.turn = 0.0
         self.condition = threading.Condition()
         self.done = False
-        self.rate = rospy.Rate(rate)
 
         if rate != 0.0:
             self.timeout = 1.0 / rate
@@ -135,9 +134,9 @@ if __name__ == '__main__':
     rospy.init_node("teleop")
     settings = termios.tcgetattr(sys.stdin)
 
-    speed = rospy.get_param("~speed", 0.5)
+    speed = rospy.get_param("~speed", 10)
     turn = rospy.get_param("~turn", 1.0)
-    repeat = rospy.get_param("~repeat_rate", 10)
+    repeat = rospy.get_param("~repeat_rate", 0.0)
     key_timeout = rospy.get_param("~key_timeout", 0.0)
     if key_timeout == 0.0:
         key_timeout = None
