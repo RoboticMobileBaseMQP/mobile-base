@@ -27,14 +27,15 @@ class Move_demo(object):
 
 
     def back_and_forth(self):
-        value = 1000
+        value = 0
+        stop = False
         while not rospy.is_shutdown():
-            print("publishing velocity")
+            stop = not stop
+            value += 1
 
-            value = 1000 if value==-1000 else -1000
-
-            self.base_controllers[3].publish(value)
-            self.arm_controllers[3].publish(value)
+            print("sending value of " + str(value if stop else 0))
+            self.base_controllers[3].publish(value if stop else 0)
+            self.arm_controllers[3].publish(value if stop else 0)
 
             time.sleep(1)
 
