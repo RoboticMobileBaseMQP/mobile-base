@@ -115,7 +115,7 @@ class TeleOpDemo(threading.Thread):
             modifier = twist[4] if i<3 else twist[5] # speed vs turn
 
             self.base_controllers[i].publish(twist[i]*modifier)
-            self.arm_controllers[i].publish(twist[i]*modifier)
+            # self.arm_controllers[i].publish(twist[i]*modifier)
 
 
 
