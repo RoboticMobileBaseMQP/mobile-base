@@ -76,7 +76,7 @@
     <transmission name="base_${axis_name}_transmission">
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="base_${axis_name}_joint">
-          <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+          <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       </joint>
       <actuator name="base_${axis_name}_joint_motor">
           <mechanicalReduction>1</mechanicalReduction>
@@ -100,7 +100,7 @@
   <transmission name="base_z_rotation_transmission">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="base_z_rotation_joint">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="base_z_rotation_joint_motor">
         <mechanicalReduction>1</mechanicalReduction>

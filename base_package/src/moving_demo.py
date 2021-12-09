@@ -34,8 +34,8 @@ class Move_demo(object):
             value += .1
 
             print("sending value of " + str(value if stop else 0))
-            self.base_controllers[0].publish(value if stop else 0)
-            self.arm_controllers[0].publish(value if stop else 0)
+            self.base_controllers[3].publish(value if stop else 0)
+            self.arm_controllers[3].publish(value if stop else 0)
 
             time.sleep(1)
 
