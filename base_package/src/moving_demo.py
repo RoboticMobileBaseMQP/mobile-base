@@ -31,7 +31,7 @@ class Move_demo(object):
         stop = False
         while not rospy.is_shutdown():
             stop = not stop
-            value += 1
+            value += .1
 
             print("sending value of " + str(value if stop else 0))
             self.base_controllers[0].publish(value if stop else 0)
