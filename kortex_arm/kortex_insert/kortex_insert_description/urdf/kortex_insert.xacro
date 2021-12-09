@@ -61,7 +61,7 @@
     <transmission name="kortex_${axis_name}_transmission">
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="kortex_${axis_name}_joint">
-          <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+          <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
       </joint>
       <actuator name="kortex_${axis_name}_joint_motor">
           <mechanicalReduction>1</mechanicalReduction>
@@ -79,13 +79,13 @@
     <parent link="arm_z_link"/>
     <child link="base_link" />
     <axis xyz="0 0 1"/>
-    <limit effort="1000.0" lower="-0.2" upper="0.2" velocity="0.5"/>
+    <limit effort="1000.0" velocity="2"/>
   </joint>
 
   <transmission name="kortex_z_rotation_transmission">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="kortex_z_rotation_joint">
-        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
     </joint>
     <actuator name="kortex_z_rotation_joint_motor">
         <mechanicalReduction>1</mechanicalReduction>

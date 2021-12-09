@@ -14,3 +14,8 @@ This simulation is still in early development. To run the simulation with both t
 
 `roslaunch mobile_base_simulation arm_and_base.launch`
 
+### NOTE
+
+To get the kortex arm to move in the simulation, `kortex_arm/ros_kortex/kortex_description/robots/kortex_robot.xacro` has a line that links the arm to the world. Comment out lines 25-32 in that file (`<xacro:if value="${sim}">...`).
+
+Also, to get the insert's position controllers to work, comment out lines 64-68 in the above file (`<gazebo> <plugin name=...`).
