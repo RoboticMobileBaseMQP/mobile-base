@@ -42,7 +42,7 @@
       <parent link="${parent}"/>
       <child link="${child}" />
       <axis xyz="${xyz}"/>
-      <limit effort="1000.0" lower="-0.2" upper="0.2" velocity="0.5"/>
+      <limit effort="1000" lower="-100" upper="100" velocity="2"/>
     </joint>
 
     <xacro:if value="${child != 'base_link'}">
