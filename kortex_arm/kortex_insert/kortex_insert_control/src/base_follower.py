@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
+from threading import current_thread
 import rospy
 from std_msgs.msg import Float64
 from tf2_msgs.msg import TFMessage
 from tf import TransformListener
-
+from tf.transformations import euler_from_quaternion
 
 
 class Follower(object):
@@ -12,6 +13,7 @@ class Follower(object):
         self.tf = TransformListener()
 
         self.arm_controllers = []
+        self.prev_value = [0,0,0]
 
         arm_controller_str = "/my_gen3/kortex_{0}_joint_controller/command"
 
@@ -26,14 +28,31 @@ class Follower(object):
 
     def callback(self, data):
         try:
-            t = self.tf.getLatestCommonTime("/base_link", "/world")
-            position, quaternion = self.tf.lookupTransform("/base_link", "/world", t)
-            # print(position, quaternion)
-            self.arm_controllers[0].publish(position.x)
-            self.arm_controllers[1].publish(position.y)
-            self.arm_controllers[3].publish(quaternion.z)
-            print("-------")
-        except Exception:
+            # get position and quaternion between world and base
+            position, quaternion = self.tf.lookupTransform("world", "base_footprint", rospy.Time())
+            
+
+            if position != [0.0,0.0,0.0]:    
+                # print(position)
+
+                euler = euler_from_quaternion(quaternion) # translate to euler
+                curr_val = (position[0], position[1], euler[2]) # x, y pos and z rotation
+                # print(curr_val)
+
+                # calc all differences between prev and curr value
+                # differences = list(map(lambda x,y: abs(x - y), curr_val, self.prev_value))
+                # print(differences)
+
+                # if differences are within .2
+                # if all(d < .2 for d in differences):
+                    # publish to arm
+                self.arm_controllers[0].publish(curr_val[0])
+                self.arm_controllers[1].publish(curr_val[1])
+                self.arm_controllers[3].publish(curr_val[2])
+                
+                self.prev_value = curr_val
+        except Exception as e:
+            print(e)
             pass
         
 

@@ -2,7 +2,7 @@
 
   <!-- Launch arm from kortex_gazebo -->
   <include file="$(find kortex_insert_description)/launch/spawn_kortex_insert.launch">
-    <arg name="start_rviz" value="true" />
+    <arg name="start_rviz" value="false" />
     <arg name="x0" value="0"/>
     <arg name="y0" value="0"/>
     <arg name="z0" value="1"/>
@@ -31,5 +31,7 @@
     <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model mobile_base" />
 
   </group>
+
+  <node pkg="kortex_insert_control" name="base_follower" type="base_follower.py" output="screen" />
 
 </launch>
