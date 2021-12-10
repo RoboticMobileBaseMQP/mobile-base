@@ -58,17 +58,11 @@ class TeleOpDemo(threading.Thread):
         self.arm_controllers = []
 
         base_controller_str = "/base/base_{0}_joint_controller/command"
-        arm_controller_str = "/my_gen3/kortex_{0}_joint_controller/command"
 
         self.base_controllers.append(rospy.Publisher(base_controller_str.format('x'), Float64, queue_size=10))
         self.base_controllers.append(rospy.Publisher(base_controller_str.format('y'), Float64, queue_size=10))
         self.base_controllers.append(rospy.Publisher(base_controller_str.format('z'), Float64, queue_size=10))
         self.base_controllers.append(rospy.Publisher("/base/base_z_rotation_controller/command", Float64, queue_size=10))
-
-        self.arm_controllers.append(rospy.Publisher(arm_controller_str.format('x'), Float64, queue_size=10))
-        self.arm_controllers.append(rospy.Publisher(arm_controller_str.format('y'), Float64, queue_size=10))
-        self.arm_controllers.append(rospy.Publisher(arm_controller_str.format('z'), Float64, queue_size=10))
-        self.arm_controllers.append(rospy.Publisher("/my_gen3/kortex_z_rotation_controller/command", Float64, queue_size=10))
 
         self.start()
 
@@ -112,10 +106,9 @@ class TeleOpDemo(threading.Thread):
     
     def publish_to_all(self, twist):
         for i in range(4):
-            modifier = twist[4] if i<3 else twist[5] # speed vs turn
+            modifier = twist[4] if i<3 else twist[5] # velocity vs turn speed
 
             self.base_controllers[i].publish(twist[i]*modifier)
-            # self.arm_controllers[i].publish(twist[i]*modifier)
 
 
 
@@ -166,11 +159,6 @@ if __name__ == '__main__':
                 speed = speed * speedBindings[key][0]
                 turn = turn * speedBindings[key][1]
 
-                # print(vels(speed,turn))
-                # if (status == 14):
-                #     print(msg)
-                # status = (status + 1) % 15
-                
             else:
                 # Skip updating cmd_vel if key timeout and robot already
                 # stopped.
@@ -192,12 +180,3 @@ if __name__ == '__main__':
         pub_thread.stop()
 
         termios.tcsetattr(sys.stdin, termios.TCSADRAIN, settings)
-
-
-    # try:
-    #     print("running main")
-    #     d = Move_demo()
-    #     d.back_and_forth()
-    # except rospy.ROSInterruptException:
-    #     print("base movement node error")
-        
