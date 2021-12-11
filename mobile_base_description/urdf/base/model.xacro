@@ -57,7 +57,7 @@
       <parent link="${parent}"/>
       <child link="${child}" />
       <axis xyz="${xyz}"/>
-      <limit effort="1000.0" lower="-0.2" upper="0.2" velocity="0.5"/>
+      <limit effort="1000" lower="-100" upper="100" velocity="2"/>
     </joint>
 
     <xacro:if value="${child != 'base_footprint'}">
@@ -86,7 +86,25 @@
 
   <xacro:prismatic_joint_macro axis_name="x" xyz="1 0 0" parent="world" child="base_x_link"/>
   <xacro:prismatic_joint_macro axis_name="y" xyz="0 1 0" parent="base_x_link" child="base_y_link"/>
-  <xacro:prismatic_joint_macro axis_name="z" xyz="0 0 1" parent="base_y_link" child="base_footprint"/>
+  <xacro:prismatic_joint_macro axis_name="z" xyz="0 0 1" parent="base_y_link" child="base_z_link"/>
 
+  <!-- Load world rotation joint -->
+  <joint name="base_z_rotation_joint" type="continuous">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="base_z_link"/>
+    <child link="base_footprint" />
+    <axis xyz="0 0 1"/>
+    <limit effort="1000" lower="-10" upper="10" velocity="2"/>
+  </joint>
 
-  </robot>
+  <transmission name="base_z_rotation_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="base_z_rotation_joint">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="base_z_rotation_joint_motor">
+        <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+</robot>

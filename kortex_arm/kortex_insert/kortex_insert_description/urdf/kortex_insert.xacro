@@ -42,7 +42,7 @@
       <parent link="${parent}"/>
       <child link="${child}" />
       <axis xyz="${xyz}"/>
-      <limit effort="1000.0" lower="-0.2" upper="0.2" velocity="0.5"/>
+      <limit effort="1000" lower="-100" upper="100" velocity="2"/>
     </joint>
 
     <xacro:if value="${child != 'base_link'}">
@@ -61,7 +61,7 @@
     <transmission name="kortex_${axis_name}_transmission">
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="kortex_${axis_name}_joint">
-          <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+          <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
       </joint>
       <actuator name="kortex_${axis_name}_joint_motor">
           <mechanicalReduction>1</mechanicalReduction>
@@ -71,8 +71,26 @@
 
   <xacro:prismatic_joint_macro axis_name="x" xyz="1 0 0" parent="world" child="arm_x_link"/>
   <xacro:prismatic_joint_macro axis_name="y" xyz="0 1 0" parent="arm_x_link" child="arm_y_link"/>
-  <xacro:prismatic_joint_macro axis_name="z" xyz="0 0 1" parent="arm_y_link" child="base_link"/>
+  <xacro:prismatic_joint_macro axis_name="z" xyz="0 0 1" parent="arm_y_link" child="arm_z_link"/>
 
+  <!-- Load world rotation joint -->
+  <joint name="kortex_z_rotation_joint" type="continuous">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="arm_z_link"/>
+    <child link="base_link" />
+    <axis xyz="0 0 1"/>
+    <limit effort="1000.0" velocity="2"/>
+  </joint>
+
+  <transmission name="kortex_z_rotation_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="kortex_z_rotation_joint">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="kortex_z_rotation_joint_motor">
+        <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
 
   <gazebo>
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">

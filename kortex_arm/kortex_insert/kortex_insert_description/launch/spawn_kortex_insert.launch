@@ -87,14 +87,18 @@
         <rosparam file="$(find kortex_control)/grippers/$(arg gripper)/config/gripper_action_controller_parameters.yaml" command="load" subst_value="true"
             unless="$(eval not arg('gripper'))"/>
 
+        <!-- launch insert position controllers -->
+        <node name="insert_position_controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+            output="screen" args="kortex_x_joint_controller
+                                kortex_y_joint_controller
+                                kortex_z_joint_controller
+                                kortex_z_rotation_controller" />
+
         <!-- Start the trajectory controllers -->
 
         <!-- Without gripper -->
         <node name="$(arg prefix)$(arg arm)_trajectory_controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
-            output="screen" args="$(arg prefix)$(arg arm)_joint_trajectory_controller $(arg prefix)joint_state_controller
-            kortex_x_joint_controller
-            kortex_y_joint_controller
-            kortex_z_joint_controller"
+            output="screen" args="$(arg prefix)$(arg arm)_joint_trajectory_controller $(arg prefix)joint_state_controller"
             if="$(eval not arg('gripper'))"/>
 
         <!-- With gripper -->

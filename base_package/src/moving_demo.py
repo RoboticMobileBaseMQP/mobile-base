@@ -18,22 +18,24 @@ class Move_demo(object):
         self.base_controllers.append(rospy.Publisher(base_controller_str.format('x'), Float64, queue_size=10))
         self.base_controllers.append(rospy.Publisher(base_controller_str.format('y'), Float64, queue_size=10))
         self.base_controllers.append(rospy.Publisher(base_controller_str.format('z'), Float64, queue_size=10))
+        self.base_controllers.append(rospy.Publisher("/base/base_z_rotation_controller/command", Float64, queue_size=10))
 
         self.arm_controllers.append(rospy.Publisher(arm_controller_str.format('x'), Float64, queue_size=10))
         self.arm_controllers.append(rospy.Publisher(arm_controller_str.format('y'), Float64, queue_size=10))
         self.arm_controllers.append(rospy.Publisher(arm_controller_str.format('z'), Float64, queue_size=10))
+        self.arm_controllers.append(rospy.Publisher("/my_gen3/kortex_z_rotation_controller/command", Float64, queue_size=10))
 
 
     def back_and_forth(self):
-
-        forward = True
-
+        value = 0
+        stop = False
         while not rospy.is_shutdown():
-            print("publishing velocity")
-            forward = not forward
+            stop = not stop
+            value += .1
 
-            self.base_controllers[0].publish(1000 if forward else -1000)
-            self.arm_controllers[0].publish(1000 if forward else -1000)
+            print("sending value of " + str(value if stop else 0))
+            self.base_controllers[3].publish(value if stop else 0)
+            self.arm_controllers[3].publish(value if stop else 0)
 
             time.sleep(1)
 
