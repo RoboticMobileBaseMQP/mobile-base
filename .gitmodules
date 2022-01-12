@@ -1,9 +1,1 @@
-[submodule "ros_kortex"]
-	path = ros_kortex
-	url = https://github.com/Kinovarobotics/ros_kortex
-[submodule "panda_arm/franka_ros"]
-	path = panda_arm/franka_ros
-	url = https://github.com/frankaemika/franka_ros.git
-[submodule "panda_arm/panda_moveit_config"]
-	path = panda_arm/panda_moveit_config
-	url = https://github.com/ros-planning/panda_moveit_config.git
+
