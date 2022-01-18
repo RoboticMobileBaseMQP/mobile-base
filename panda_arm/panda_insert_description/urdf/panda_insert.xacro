@@ -94,6 +94,7 @@
 
   <gazebo>
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+        <robotNamespace>${arm_id}</robotNamespace>
         <robotSimType>franka_gazebo/FrankaHWSim</robotSimType>
     </plugin>
   </gazebo>
