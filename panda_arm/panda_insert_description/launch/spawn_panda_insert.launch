@@ -48,6 +48,9 @@
     <arg name="use_sim_time" value="true"/>
   </include>
 
+  <!-- Load actuator parameters to param server-->  
+  <rosparam file="$(find panda_insert_description)/config/panda_insert_control.yaml" command="load" />
+
   <group ns="$(arg arm_id)">
     <param name="robot_description"
            command="xacro $(find panda_insert_description)/urdf/panda_insert.xacro
@@ -93,6 +96,13 @@
           respawn="false" output="screen"
           args="franka_state_controller $(arg controller)"
     />
+
+    <!-- launch insert position controllers -->
+    <node name="insert_position_controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+        output="screen" args="panda_x_joint_controller
+                            panda_y_joint_controller
+                            panda_z_joint_controller
+                            panda_z_rotation_controller" />
 
     <remap to="cartesian_impedance_example_controller/equilibrium_pose" from="equilibrium_pose" />
 

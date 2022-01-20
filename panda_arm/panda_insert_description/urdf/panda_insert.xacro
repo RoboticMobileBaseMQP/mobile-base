@@ -14,7 +14,7 @@
 
   <link name="insert_link">
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 0" />
+      <origin xyz="0 0 -.1" rpy="0 0 0" />
       <geometry>
         <box size=".2 .2 .2"/>
       </geometry>
@@ -61,7 +61,7 @@
     <transmission name="panda_${axis_name}_transmission">
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="panda_${axis_name}_joint">
-          <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+          <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       </joint>
       <actuator name="panda_${axis_name}_joint_motor">
           <mechanicalReduction>1</mechanicalReduction>
@@ -85,7 +85,7 @@
   <transmission name="panda_z_rotation_transmission">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="panda_z_rotation_joint">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="panda_z_rotation_joint_motor">
         <mechanicalReduction>1</mechanicalReduction>
@@ -95,7 +95,7 @@
   <gazebo>
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
         <robotNamespace>${arm_id}</robotNamespace>
-        <robotSimType>franka_gazebo/FrankaHWSim</robotSimType>
+        <robotSimType>franka_gazebo/FrankaHWSim</robotSimType> 
     </plugin>
   </gazebo>
 </robot>

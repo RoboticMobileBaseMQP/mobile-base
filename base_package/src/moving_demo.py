@@ -12,8 +12,11 @@ class Move_demo(object):
         self.base_controllers = []
         self.arm_controllers = []
 
+        arm_namespace = "panda" #my_gen3
+        arm_name = "panda" # "kortex"
+
         base_controller_str = "/base/base_{0}_joint_controller/command"
-        arm_controller_str = "/my_gen3/kortex_{0}_joint_controller/command"
+        arm_controller_str = "/" + arm_namespace + "/" + arm_name + "{0}_joint_controller/command"
 
         self.base_controllers.append(rospy.Publisher(base_controller_str.format('x'), Float64, queue_size=10))
         self.base_controllers.append(rospy.Publisher(base_controller_str.format('y'), Float64, queue_size=10))
@@ -23,7 +26,7 @@ class Move_demo(object):
         self.arm_controllers.append(rospy.Publisher(arm_controller_str.format('x'), Float64, queue_size=10))
         self.arm_controllers.append(rospy.Publisher(arm_controller_str.format('y'), Float64, queue_size=10))
         self.arm_controllers.append(rospy.Publisher(arm_controller_str.format('z'), Float64, queue_size=10))
-        self.arm_controllers.append(rospy.Publisher("/my_gen3/kortex_z_rotation_controller/command", Float64, queue_size=10))
+        self.arm_controllers.append(rospy.Publisher("/" + arm_namespace + "/" + arm_name + "_z_rotation_controller/command", Float64, queue_size=10))
 
 
     def back_and_forth(self):
