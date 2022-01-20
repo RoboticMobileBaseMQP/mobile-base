@@ -2,13 +2,13 @@
 
 <robot name="panda_insert" xmlns:xacro="http://ros.org/wiki/xacro">
 
-  <xacro:include filename="$(find franka_description)/robots/panda_arm.urdf.xacro"/>
+  <xacro:include filename="$(find franka_description)/robots/panda_arm.urdf.xacro" />
 
   <link name="world" />
 
   <joint name="insert_link_joint" type="fixed">
     <origin xyz="0 0 0" rpy="0 0 0" />
-    <parent link="panda_link0"/> <!-- I think -->
+    <parent link="panda_link0"/>
     <child link="insert_link" />
   </joint>
 
@@ -20,7 +20,7 @@
       </geometry>
     </visual>
     <collision>
-      <origin xyz="0 0 0"/>
+      <origin xyz="0 0 -.1"/>
       <geometry>
         <box size=".2 .2 .2"/>
       </geometry>
@@ -36,27 +36,25 @@
   </link>
 
    <!-- Load world prismatic joints-->
-  <xacro:macro name="prismatic_joint_macro" params="axis_name xyz parent child">
+  <xacro:macro name="prismatic_joint_macro" params="axis_name z:=0 axis parent child">
     <joint name="panda_${axis_name}_joint" type="prismatic">
       <origin xyz="0 0 0" rpy="0 0 0" />
       <parent link="${parent}"/>
       <child link="${child}" />
-      <axis xyz="${xyz}"/>
+      <axis xyz="${axis}"/>
       <limit effort="1000" lower="-100" upper="100" velocity="2"/>
     </joint>
-
-    <xacro:if value="${child != 'base_link'}">
-      <link name="arm_${axis_name}_link">
-        <inertial>
-        <origin xyz="0 0 0" rpy="0 0 0" />
-        <mass value="1" />
-        <inertia
-          ixx="1.0" ixy="0.0" ixz="0.0"
-          iyy="1.0" iyz="0.0"
-          izz="1.0" />
-        </inertial>
-      </link>
-    </xacro:if>
+    
+    <link name="arm_${axis_name}_link">
+    <inertial>
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <mass value="1" />
+    <inertia
+        ixx="1.0" ixy="0.0" ixz="0.0"
+        iyy="1.0" iyz="0.0"
+        izz="1.0" />
+    </inertial>
+    </link>
 
     <transmission name="panda_${axis_name}_transmission">
       <type>transmission_interface/SimpleTransmission</type>
@@ -69,9 +67,9 @@
     </transmission>
   </xacro:macro>
 
-  <xacro:prismatic_joint_macro axis_name="x" xyz="1 0 0" parent="world" child="arm_x_link"/>
-  <xacro:prismatic_joint_macro axis_name="y" xyz="0 1 0" parent="arm_x_link" child="arm_y_link"/>
-  <xacro:prismatic_joint_macro axis_name="z" xyz="0 0 1" parent="arm_y_link" child="arm_z_link"/>
+  <xacro:prismatic_joint_macro axis_name="x" z="0" axis="1 0 0" parent="world" child="arm_x_link"/>
+  <xacro:prismatic_joint_macro axis_name="y" axis="0 1 0" parent="arm_x_link" child="arm_y_link"/>
+  <xacro:prismatic_joint_macro axis_name="z" axis="0 0 1" parent="arm_y_link" child="arm_z_link"/>
 
   <!-- Load world rotation joint -->
   <joint name="panda_z_rotation_joint" type="continuous">

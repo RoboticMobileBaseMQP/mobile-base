@@ -48,7 +48,7 @@
     <arg name="use_sim_time" value="true"/>
   </include>
 
-  <!-- Load actuator parameters to param server-->  
+  <!-- Load translation controller parameters to param server-->  
   <rosparam file="$(find panda_insert_description)/config/panda_insert_control.yaml" command="load" />
 
   <group ns="$(arg arm_id)">
@@ -57,21 +57,21 @@
                     gazebo:=true
                     hand:=$(arg use_gripper)
                     arm_id:=$(arg arm_id)
-                    xyz:='$(arg x) $(arg y) $(arg z)'
+                    origin_xyz:='$(arg x) $(arg y) $(arg z)'
                     rpy:='$(arg roll) $(arg pitch) $(arg yaw)'">
     </param>
 
     <rosparam file="$(find franka_gazebo)/config/franka_hw_sim.yaml" subst_value="true" />
     <rosparam file="$(find franka_gazebo)/config/sim_controllers.yaml" subst_value="true" />
 
-    <node name="$(arg arm_id)_model_spawner"
+    <!-- <node name="$(arg arm_id)_model_spawner"
           pkg="gazebo_ros"
           type="spawn_model"
           if="$(arg paused)"
           args="-param robot_description -urdf -model $(arg arm_id)
                 $(arg initial_joint_positions)
                 ">
-    </node>
+    </node> -->
     <node name="$(arg arm_id)_model_spawner"
           pkg="gazebo_ros"
           type="spawn_model"
