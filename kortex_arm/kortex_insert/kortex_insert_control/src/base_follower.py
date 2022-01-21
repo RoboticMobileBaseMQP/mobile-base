@@ -15,12 +15,18 @@ class Follower(object):
         self.arm_controllers = []
         self.prev_value = [0,0,0]
 
-        arm_controller_str = "/my_gen3/kortex_{0}_joint_controller/command"
+        panda = True
+
+        arm_namespace = "panda" if panda else "my_gen3"
+        arm_name = "panda" if panda else "kortex"
+        self.root_joint_name = "panda_link0" if panda else "base_footprint"
+
+        arm_controller_str = "/" + arm_namespace + "/" + arm_name + "_{0}_joint_controller/command"
 
         self.arm_controllers.append(rospy.Publisher(arm_controller_str.format('x'), Float64, queue_size=10))
         self.arm_controllers.append(rospy.Publisher(arm_controller_str.format('y'), Float64, queue_size=10))
         self.arm_controllers.append(rospy.Publisher(arm_controller_str.format('z'), Float64, queue_size=10))
-        self.arm_controllers.append(rospy.Publisher("/my_gen3/kortex_z_rotation_controller/command", Float64, queue_size=10))
+        self.arm_controllers.append(rospy.Publisher("/" + arm_namespace + "/" + arm_name + "_z_rotation_controller/command", Float64, queue_size=10))
 
         rospy.Subscriber("tf/", TFMessage, self.callback)
 
@@ -29,7 +35,7 @@ class Follower(object):
     def callback(self, data):
         try:
             # get position and quaternion between world and base
-            position, quaternion = self.tf.lookupTransform("world", "base_footprint", rospy.Time())
+            position, quaternion = self.tf.lookupTransform("world", self.root_joint_name, rospy.Time())
             
 
             if position != [0.0,0.0,0.0]:    
@@ -49,6 +55,8 @@ class Follower(object):
                 self.arm_controllers[0].publish(curr_val[0])
                 self.arm_controllers[1].publish(curr_val[1])
                 self.arm_controllers[3].publish(curr_val[2])
+
+                self.arm_controllers[2].publish(1)
                 
                 self.prev_value = curr_val
         except Exception as e:

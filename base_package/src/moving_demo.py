@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from torch import true_divide
 import rospy
 from std_msgs.msg import Float64
 from geometry_msgs.msg import Twist
@@ -6,13 +7,13 @@ import time
 
 class Move_demo(object):
     def __init__(self):
-        rospy.init_node("base_random_move")
+        rospy.init_node("random_move")
         self.rate = rospy.Rate(.5)
 
         self.base_controllers = []
         self.arm_controllers = []
 
-        panda = False
+        panda = True
 
         arm_namespace = "panda" if panda else "my_gen3"
         arm_name = "panda" if panda else "kortex"
