@@ -2,7 +2,8 @@
 
 <robot name="panda_insert" xmlns:xacro="http://ros.org/wiki/xacro">
 
-  <xacro:include filename="$(find franka_description)/robots/panda_arm.urdf.xacro" />
+  <xacro:include filename="$(find franka_description)/robots/panda_arm.xacro" />
+  <xacro:panda_arm />
 
   <link name="world" />
 
@@ -90,10 +91,11 @@
     </actuator>
   </transmission>
 
+  <!-- Gazebo control plugin -->
   <gazebo>
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-        <robotNamespace>${arm_id}</robotNamespace>
-        <robotSimType>franka_gazebo/FrankaHWSim</robotSimType> 
+      <robotNamespace>/panda</robotNamespace>
+      <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
     </plugin>
   </gazebo>
 </robot>
