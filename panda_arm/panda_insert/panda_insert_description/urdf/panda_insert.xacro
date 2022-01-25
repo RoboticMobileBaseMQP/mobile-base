@@ -2,7 +2,7 @@
 
 <robot name="panda_insert" xmlns:xacro="http://ros.org/wiki/xacro">
 
-  <xacro:include filename="$(find franka_description)/robots/panda_arm.urdf.xacro" />
+  <xacro:include filename="$(find franka_description)/robots/panda_arm_hand.urdf.xacro" />
 
   <link name="world" />
 
@@ -38,7 +38,7 @@
    <!-- Load world prismatic joints-->
   <xacro:macro name="prismatic_joint_macro" params="axis_name z:=0 axis parent child">
     <joint name="panda_${axis_name}_joint" type="prismatic">
-      <origin xyz="0 0 0" rpy="0 0 0" />
+      <origin xyz="0 0 ${z}" rpy="0 0 0" />
       <parent link="${parent}"/>
       <child link="${child}" />
       <axis xyz="${axis}"/>
@@ -59,7 +59,7 @@
     <transmission name="panda_${axis_name}_transmission">
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="panda_${axis_name}_joint">
-          <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+          <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
       </joint>
       <actuator name="panda_${axis_name}_joint_motor">
           <mechanicalReduction>1</mechanicalReduction>
@@ -67,7 +67,7 @@
     </transmission>
   </xacro:macro>
 
-  <xacro:prismatic_joint_macro axis_name="x" z="0" axis="1 0 0" parent="world" child="arm_x_link"/>
+  <xacro:prismatic_joint_macro axis_name="x" z="1" axis="1 0 0" parent="world" child="arm_x_link"/>
   <xacro:prismatic_joint_macro axis_name="y" axis="0 1 0" parent="arm_x_link" child="arm_y_link"/>
   <xacro:prismatic_joint_macro axis_name="z" axis="0 0 1" parent="arm_y_link" child="arm_z_link"/>
 
@@ -83,17 +83,18 @@
   <transmission name="panda_z_rotation_transmission">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="panda_z_rotation_joint">
-        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
     </joint>
     <actuator name="panda_z_rotation_joint_motor">
         <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
 
+  <!-- Gazebo control plugin -->
   <gazebo>
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-        <robotNamespace>${arm_id}</robotNamespace>
-        <robotSimType>franka_gazebo/FrankaHWSim</robotSimType> 
+      <robotNamespace>/panda</robotNamespace>
+      <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
     </plugin>
   </gazebo>
 </robot>
