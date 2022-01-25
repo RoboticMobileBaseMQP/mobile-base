@@ -38,21 +38,26 @@
   <rosparam file="$(find panda_insert_control)/config/panda_insert_control.yaml" command="load" />
   <rosparam file="$(find panda_insert_control)/config/panda_control.yaml" command="load" />
 
-  <group ns="$(arg arm_id)">
-    <!-- Load robot description-->
-    <param name="robot_description" command="xacro --inorder $(find panda_insert_description)/urdf/panda_insert.xacro" />
+  <!-- <group ns="$(arg arm/_id)"> -->
+  <!-- </group> -->
 
-    <!-- Spawn panda robot -->
+    <!-- Load robot description-->
+    <param name="robot_description" command="xacro --inorder $(find panda_insert_description)/urdf/panda_insert.xacro"/>
+
+    <!-- Spawn panda_insert robot -->
     <node name="spawn_franka_urdf" pkg="gazebo_ros" type="spawn_model"
   	args="-param robot_description -urdf -model robot" output="screen" />
 
+    <!-- Launch arm controllers -->
+    <!-- <node name="panda_moveit_controller_spawner" pkg="controller_manager" type="spawner" respawn="false" 
+      args="joint_state_controller gazebo_ros_control panda_finger1_controller panda_finger2_controller" ns="/panda" /> -->
     
     <!-- Launch insert controllers -->
     <node name="insert_position_controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
         output="screen" args="panda_x_joint_controller
                             panda_y_joint_controller
                             panda_z_joint_controller
-                            panda_z_rotation_controller" />
+                            panda_z_rotation_controller" ns="/panda" />
     
     <!-- Launch robot_state_publisher -->
     <node name="panda_moveit_robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true">
@@ -63,10 +68,6 @@
     <!-- <include file="$(find panda_moveit_config)/launch/move_group.launch">
       <remap from="joint_states" to="panda/joint_states" />
     </include> -->
-  </group>
-    <!-- Launch panda controllers -->
-    <node name="panda_moveit_controller_spawner" pkg="controller_manager" type="spawner" respawn="false" 
-      args="joint_state_controller gazebo_ros_control " />
 
   <node  pkg="rviz" type="rviz" output="screen" name="rviz" if="$(arg rviz)"/>
 
