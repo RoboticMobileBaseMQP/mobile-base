@@ -27,7 +27,7 @@ if __name__ == "__main__":
     pose_goal = geometry_msgs.msg.Pose()
     pose_goal.orientation.w = 1.0
     pose_goal.position.x = -0.5
-    pose_goal.position.y = -3
+    pose_goal.position.y = -0.5
     pose_goal.position.z = 0.3
     print("Requesting.. ")
     move_arm_client(pose_goal)

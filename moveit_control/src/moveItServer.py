@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from distutils.sysconfig import get_config_var
 import sys
 import rospy
 import moveit_commander
@@ -50,6 +51,7 @@ class MoveItPlanner:
             self.arm_group.set_pose_target(pose.pose)
             rospy.loginfo("Planning and going to waypoint")
             self.arm_group.go(wait=True)
+            self.get_cartesian_pose(self.arm_group)
 
             bool.data = True
             print("Success")
