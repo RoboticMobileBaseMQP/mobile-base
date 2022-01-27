@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
-
 <robot name="panda_insert" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:arg name="origin" default="0 0 1" />
 
   <xacro:include filename="$(find franka_description)/robots/panda_arm_hand.urdf.xacro" />
 
@@ -36,13 +37,13 @@
   </link>
 
    <!-- Load world prismatic joints-->
-  <xacro:macro name="prismatic_joint_macro" params="axis_name z:=0 axis parent child">
+  <xacro:macro name="prismatic_joint_macro" params="axis_name origin:='0 0 0' axis parent child">
     <joint name="panda_${axis_name}_joint" type="prismatic">
-      <origin xyz="0 0 ${z}" rpy="0 0 0" />
+      <origin xyz="${origin}" rpy="0 0 0" />
       <parent link="${parent}"/>
       <child link="${child}" />
       <axis xyz="${axis}"/>
-      <limit effort="1000" lower="-100" upper="100" velocity="2"/>
+      <limit effort="1000" lower="-1000" upper="1000" velocity="2"/>
     </joint>
     
     <link name="arm_${axis_name}_link">
@@ -67,7 +68,7 @@
     </transmission>
   </xacro:macro>
 
-  <xacro:prismatic_joint_macro axis_name="x" z="1" axis="1 0 0" parent="world" child="arm_x_link"/>
+  <xacro:prismatic_joint_macro axis_name="x" origin="$(arg origin)" axis="1 0 0" parent="world" child="arm_x_link"/>
   <xacro:prismatic_joint_macro axis_name="y" axis="0 1 0" parent="arm_x_link" child="arm_y_link"/>
   <xacro:prismatic_joint_macro axis_name="z" axis="0 0 1" parent="arm_y_link" child="arm_z_link"/>
 
@@ -94,7 +95,7 @@
   <gazebo>
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
       <robotNamespace>/panda</robotNamespace>
-      <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+      <!-- <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType> -->
     </plugin>
   </gazebo>
 </robot>

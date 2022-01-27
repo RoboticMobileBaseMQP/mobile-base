@@ -61,7 +61,7 @@
     <transmission name="kortex_${axis_name}_transmission">
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="kortex_${axis_name}_joint">
-          <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+          <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
       </joint>
       <actuator name="kortex_${axis_name}_joint_motor">
           <mechanicalReduction>1</mechanicalReduction>
@@ -85,7 +85,7 @@
   <transmission name="kortex_z_rotation_transmission">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="kortex_z_rotation_joint">
-        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
     </joint>
     <actuator name="kortex_z_rotation_joint_motor">
         <mechanicalReduction>1</mechanicalReduction>

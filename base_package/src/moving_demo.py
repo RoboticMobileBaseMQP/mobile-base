@@ -13,7 +13,7 @@ class Move_demo(object):
         self.base_controllers = []
         self.arm_controllers = []
 
-        panda = True
+        panda = False
 
         arm_namespace = "panda" if panda else "my_gen3"
         arm_name = "panda" if panda else "kortex"
