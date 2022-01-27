@@ -59,7 +59,7 @@
     <transmission name="panda_${axis_name}_transmission">
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="panda_${axis_name}_joint">
-          <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+          <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       </joint>
       <actuator name="panda_${axis_name}_joint_motor">
           <mechanicalReduction>1</mechanicalReduction>
@@ -83,7 +83,7 @@
   <transmission name="panda_z_rotation_transmission">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="panda_z_rotation_joint">
-        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
     <actuator name="panda_z_rotation_joint_motor">
         <mechanicalReduction>1</mechanicalReduction>
@@ -94,7 +94,7 @@
   <gazebo>
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
       <robotNamespace>/panda</robotNamespace>
-      <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+      <!-- <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType> -->
     </plugin>
   </gazebo>
 </robot>
