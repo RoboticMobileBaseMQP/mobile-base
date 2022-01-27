@@ -13,10 +13,8 @@ class Move_demo(object):
         self.base_controllers = []
         self.arm_controllers = []
 
-        panda = False
-
-        arm_namespace = "panda" if panda else "my_gen3"
-        arm_name = "panda" if panda else "kortex"
+        arm_name = rospy.get_param("arm")
+        arm_namespace = "panda" if arm_name=="panda" else "my_gen3"
 
         base_controller_str = "/base/base_{0}_joint_controller/command"
         arm_controller_str = "/" + arm_namespace + "/" + arm_name + "_{0}_joint_controller/command"
