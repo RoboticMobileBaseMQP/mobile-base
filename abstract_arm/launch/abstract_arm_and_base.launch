@@ -21,5 +21,5 @@
 
   <include file="$(find mobile_base_description)/launch/spawn_base.launch" />
 
-  <node pkg="abstract-arm" name="base_follower" type="base_follower.py" output="screen" />
+  <node pkg="abstract_arm" name="base_follower" type="base_follower.py" output="screen" />
 </launch>

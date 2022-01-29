@@ -37,7 +37,7 @@ class Follower(object):
             position, quaternion = self.tf.lookupTransform("world", self.root_joint_name, rospy.Time())
 
             if position != [0.0,0.0,0.0]:    
-                print(position)
+                # print(position)
 
                 euler = euler_from_quaternion(quaternion) # translate to euler
                 curr_val = (position[0], position[1], euler[2]) # x, y pos and z rotation

@@ -1,5 +1,0 @@
-geometry_msgs/Pose[] ee_poses
----
-bool grasped
----
-bool done
