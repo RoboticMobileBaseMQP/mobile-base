@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from torch import true_divide
 import rospy
 from std_msgs.msg import Float64
 from geometry_msgs.msg import Twist
@@ -6,14 +7,17 @@ import time
 
 class Move_demo(object):
     def __init__(self):
-        rospy.init_node("base_random_move")
+        rospy.init_node("random_move")
         self.rate = rospy.Rate(.5)
 
         self.base_controllers = []
         self.arm_controllers = []
 
+        arm_name = rospy.get_param("arm")
+        arm_namespace = "panda" if arm_name=="panda" else "my_gen3"
+
         base_controller_str = "/base/base_{0}_joint_controller/command"
-        arm_controller_str = "/my_gen3/kortex_{0}_joint_controller/command"
+        arm_controller_str = "/" + arm_namespace + "/" + arm_name + "_{0}_joint_controller/command"
 
         self.base_controllers.append(rospy.Publisher(base_controller_str.format('x'), Float64, queue_size=10))
         self.base_controllers.append(rospy.Publisher(base_controller_str.format('y'), Float64, queue_size=10))
@@ -23,7 +27,7 @@ class Move_demo(object):
         self.arm_controllers.append(rospy.Publisher(arm_controller_str.format('x'), Float64, queue_size=10))
         self.arm_controllers.append(rospy.Publisher(arm_controller_str.format('y'), Float64, queue_size=10))
         self.arm_controllers.append(rospy.Publisher(arm_controller_str.format('z'), Float64, queue_size=10))
-        self.arm_controllers.append(rospy.Publisher("/my_gen3/kortex_z_rotation_controller/command", Float64, queue_size=10))
+        self.arm_controllers.append(rospy.Publisher("/" + arm_namespace + "/" + arm_name + "_z_rotation_controller/command", Float64, queue_size=10))
 
 
     def back_and_forth(self):
@@ -34,8 +38,10 @@ class Move_demo(object):
             value += .1
 
             print("sending value of " + str(value if stop else 0))
-            self.base_controllers[3].publish(value if stop else 0)
-            self.arm_controllers[3].publish(value if stop else 0)
+            # self.base_controllers[2].publish(value if stop else 0)
+            self.arm_controllers[2].publish(value if stop else 0)
+            self.arm_controllers[1].publish(0)
+            self.arm_controllers[0].publish(0)
 
             time.sleep(1)
 
