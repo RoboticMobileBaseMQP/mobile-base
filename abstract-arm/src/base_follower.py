@@ -15,12 +15,17 @@ class Follower(object):
         self.arm_controllers = []
         self.prev_value = [0,0,0]
 
-        arm_controller_str = "/my_gen3/kortex_{0}_joint_controller/command"
+        arm_name = rospy.get_param("arm")
+        print("arm: " + arm_name)
+        arm_namespace = "panda" if arm_name=="panda" else "my_gen3"
+        self.root_joint_name = "base_footprint" # "panda_link0" if arm_name=="panda" else "base_footprint" # idk why the panda needs the kortex base link but whatever
+
+        arm_controller_str = "/" + arm_namespace + "/" + arm_name + "_{0}_joint_controller/command"
 
         self.arm_controllers.append(rospy.Publisher(arm_controller_str.format('x'), Float64, queue_size=10))
         self.arm_controllers.append(rospy.Publisher(arm_controller_str.format('y'), Float64, queue_size=10))
         self.arm_controllers.append(rospy.Publisher(arm_controller_str.format('z'), Float64, queue_size=10))
-        self.arm_controllers.append(rospy.Publisher("/my_gen3/kortex_z_rotation_controller/command", Float64, queue_size=10))
+        self.arm_controllers.append(rospy.Publisher("/" + arm_namespace + "/" + arm_name + "_z_rotation_controller/command", Float64, queue_size=10))
 
         rospy.Subscriber("tf/", TFMessage, self.callback)
 
@@ -29,11 +34,10 @@ class Follower(object):
     def callback(self, data):
         try:
             # get position and quaternion between world and base
-            position, quaternion = self.tf.lookupTransform("world", "base_footprint", rospy.Time())
-            
+            position, quaternion = self.tf.lookupTransform("world", self.root_joint_name, rospy.Time())
 
             if position != [0.0,0.0,0.0]:    
-                # print(position)
+                print(position)
 
                 euler = euler_from_quaternion(quaternion) # translate to euler
                 curr_val = (position[0], position[1], euler[2]) # x, y pos and z rotation
@@ -46,11 +50,14 @@ class Follower(object):
                 # if differences are within .2
                 # if all(d < .2 for d in differences):
                     # publish to arm
+
                 self.arm_controllers[0].publish(curr_val[0])
                 self.arm_controllers[1].publish(curr_val[1])
                 self.arm_controllers[3].publish(curr_val[2])
+
+                # self.arm_controllers[2].publish(1)
                 
-                self.prev_value = curr_val
+                # self.prev_value = curr_val
         except Exception as e:
             print(e)
             pass

@@ -1,0 +1,25 @@
+<launch>
+  <arg name="arm" default="panda" /> <!-- determines which arm to launch-->
+  <param name="arm" value="$(arg arm)" />
+
+  <group if="$(eval arm == 'panda')">
+    <include file="$(find panda_insert_description)/launch/spawn_panda_insert.launch">
+      <arg name="rviz" value="true" />
+      <arg name="x0" value="0"/>
+      <arg name="y0" value="0"/>
+      <arg name="z0" value="1"/>
+    </include>
+  </group>
+
+  <group if="$(eval arm == 'kortex')">
+    <include file="$(find kortex_insert_description)/launch/spawn_kortex_insert.launch">
+      <arg name="x0" value="0"/>
+      <arg name="y0" value="0"/>
+      <arg name="z0" value="1"/>
+    </include>
+  </group>
+
+  <include file="$(find mobile_base_description)/launch/spawn_base.launch" />
+
+  <node pkg="abstract-arm" name="base_follower" type="base_follower.py" output="screen" />
+</launch>
