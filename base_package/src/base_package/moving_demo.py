@@ -32,6 +32,7 @@ class MoveDemo(object):
     def back_and_forth(self):
         value = 0
         stop = False
+        self.base_controllers[0].publish(10)
         while not rospy.is_shutdown():
             stop = not stop
             value += .1
