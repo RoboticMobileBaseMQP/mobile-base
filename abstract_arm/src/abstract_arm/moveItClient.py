@@ -6,7 +6,7 @@ from abstract_arm.srv import moveToPose
 from std_msgs.msg import Bool
 from tf.transformations import euler_from_quaternion, quaternion_from_euler
 
-class Moveit_Arm_Client:
+class MoveitArmClient:
     def move_arm(self, pose):
         rospy.wait_for_service('/move_it_planner')
         try:
@@ -23,7 +23,7 @@ class Moveit_Arm_Client:
             print("Service called failed: %s"%e)
 
 if __name__ == "__main__":
-    m = Moveit_Arm_Client()
+    m = MoveitArmClient()
 
     pose_goal = geometry_msgs.msg.Pose()
     pose_goal.orientation.w = 1.0

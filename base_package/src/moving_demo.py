@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
-from torch import true_divide
 import rospy
 from std_msgs.msg import Float64
 from geometry_msgs.msg import Twist
 import time
 
-class Move_demo(object):
+class MoveDemo(object):
     def __init__(self):
         rospy.init_node("random_move")
         self.rate = rospy.Rate(.5)
@@ -48,7 +47,7 @@ class Move_demo(object):
 if __name__ == '__main__':
     try:
         print("running main")
-        d = Move_demo()
+        d = MoveDemo()
         d.back_and_forth()
     except rospy.ROSInterruptException:
         print("base movement node error")
