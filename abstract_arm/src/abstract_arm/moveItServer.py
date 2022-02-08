@@ -28,7 +28,7 @@ class MoveItPlanner:
             joint_state_topic = ['joint_states:=/panda/joint_states'] # specific to panda. Not necessary with Kortex
             moveit_commander.roscpp_initialize(joint_state_topic)
 
-            self.robot = moveit_commander.RobotCommander() # 'robot_description for kortex
+            self.robot = moveit_commander.RobotCommander()
             self.arm_group_name = "panda_arm" # arm for kortex, panda_arm for panda
             self.scene = moveit_commander.PlanningSceneInterface() # ns=rospy.get_namespace()
             self.arm_group = moveit_commander.MoveGroupCommander(self.arm_group_name) # ns=rospy.get_namespace()
@@ -42,7 +42,7 @@ class MoveItPlanner:
             moveit_commander.roscpp_initialize(sys.argv)
             rospy.init_node("move_group_interface", anonymous=True)
 
-            self.robot = moveit_commander.RobotCommander('robot_description') # 'robot_description'
+            self.robot = moveit_commander.RobotCommander('robot_description')
             self.arm_group_name = "arm"
             self.scene = moveit_commander.PlanningSceneInterface() # ns=rospy.get_namespace()
             self.arm_group = moveit_commander.MoveGroupCommander(self.arm_group_name, ns=rospy.get_namespace())

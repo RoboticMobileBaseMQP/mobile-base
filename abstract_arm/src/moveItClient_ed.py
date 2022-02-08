@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from mimetypes import init
 import rospy
 import geometry_msgs.msg
 from abstract_arm.srv import moveToPose
@@ -7,9 +8,10 @@ from std_msgs.msg import Bool
 import tf2_ros
 
 class MoveItClient:
-    def __init__(self) -> None:
-        
-        rospy.init_node("moveit_client", anonymous=True)
+    def __init__(self, init_node=False) -> None:
+
+        if init_node:
+            rospy.init_node("moveit_client", anonymous=True)
 
         self.tfBuffer = tf2_ros.Buffer()
         listener = tf2_ros.TransformListener(self.tfBuffer)
@@ -32,7 +34,7 @@ class MoveItClient:
             print("Service called failed: %s"%e)
 
 if __name__ == "__main__":
-    moveItClient = MoveItClient()
+    moveItClient = MoveItClient(init_node=True)
     
     try:
         # Find relationship between wrold and base of robot arm
