@@ -18,7 +18,7 @@ class MoveItPlanner:
         s = rospy.Service('/move_it_planner', moveToPose, self.move_arm)
         
         # launch individual arm groups
-        arm_name = rospy.get_param("arm")
+        arm_name = rospy.get_param("/arm")
         print(arm_name)
 
         if arm_name == "panda": 
