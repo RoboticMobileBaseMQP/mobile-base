@@ -15,8 +15,8 @@ class MoveDemo(object):
         arm_name = rospy.get_param("arm")
         arm_namespace = "panda" if arm_name=="panda" else "my_gen3"
 
-        base_controller_str = "/base/base_{0}_joint_controller/command"
         arm_controller_str = "/" + arm_namespace + "/" + arm_name + "_{0}_joint_controller/command"
+        base_controller_str = "/base/base_{0}_joint_controller/command"
 
         self.base_controllers.append(rospy.Publisher(base_controller_str.format('x'), Float64, queue_size=10))
         self.base_controllers.append(rospy.Publisher(base_controller_str.format('y'), Float64, queue_size=10))
@@ -32,7 +32,7 @@ class MoveDemo(object):
     def back_and_forth(self):
         value = 0
         stop = False
-        self.base_controllers[0].publish(10)
+        self.base_controllers[0].publish(Float64(-10))
         while not rospy.is_shutdown():
             stop = not stop
             value += .1
