@@ -1,6 +1,7 @@
 <launch>
 
     <!-- Robot namespace -->
+    <arg name="robot_name" default="my_gen3"/>
     <arg name="start_delay_seconds" default="0"/>
       <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
     <!-- <include file="$(find panda_moveit_config)/launch/planning_context.launch">

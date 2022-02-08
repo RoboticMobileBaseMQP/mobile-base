@@ -17,6 +17,8 @@
       <arg name="y0" value="0"/>
       <arg name="z0" value="1"/>
     </include>
+
+    <include file="$(find abstract_arm)/launch/moveItServer.launch" />
   </group>
 
   <include file="$(find mobile_base_description)/launch/spawn_base.launch" />
