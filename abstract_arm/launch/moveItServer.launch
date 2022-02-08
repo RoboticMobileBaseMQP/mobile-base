@@ -9,5 +9,5 @@
     </include> -->
 
     <!-- Launch the example in that namespace -->
-    <node name="moveit_kortex" pkg="abstract_arm" type="moveItServer.py"  output="screen" launch-prefix="bash -c 'sleep $(arg start_delay_seconds); $0 $@' "/>
+    <node name="moveit_kortex" pkg="abstract_arm" type="moveItServer.py" ns="$(arg robot_name)" output="screen" launch-prefix="bash -c 'sleep $(arg start_delay_seconds); $0 $@' "/>
 </launch>
