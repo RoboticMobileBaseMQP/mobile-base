@@ -11,38 +11,49 @@ class FullBaseDemo:
         self.base_controller = BaseControl()
         self.arm_controller = MoveitArmClient()
 
+        print("initializing base and arm controller")
         time.sleep(3)
 
 
 if __name__ == "__main__":
     f = FullBaseDemo()
 
-    print("moving base ")
-    f.base_controller.base_controllers[3].publish(0.0)
-    f.base_controller.base_controllers[0].publish(-2.0)
-    f.base_controller.base_controllers[1].publish(-1.0)
-    f.base_controller.base_controllers[3].publish(0.0)
+    print("moving base")
+    f.base_controller.base_z_rotation_pos.publish(0.0)
+    f.base_controller.base_x_vel.publish(-2.0)
+    f.base_controller.base_y_vel.publish(-1.0)
+    f.base_controller.base_z_rotation_pos.publish(0.0)
 
     time.sleep(2)
 
-    f.base_controller.base_controllers[0].publish(0.0)
-    f.base_controller.base_controllers[1].publish(0.0)
+    f.base_controller.base_x_vel.publish(0.0)
+    f.base_controller.base_y_vel.publish(0.0)
 
+    time.sleep(1)
+
+    print("raising elevator")
+    f.base_controller.insert_z_pos.publish(.3)
+
+    print("moving arm to a position")
     pose_goal = geometry_msgs.msg.Pose()
     pose_goal.orientation.w = 1.0
     pose_goal.position.x = -3.0
     pose_goal.position.y = -1.0
-    pose_goal.position.z = 0.3
-    print("moving arm to a position")
+    pose_goal.position.z = 0.6
     f.arm_controller.move_arm(pose_goal)
-
-    time.sleep(6)
-
-    print("moving base back")
-    f.base_controller.base_controllers[0].publish(2.0)
-    f.base_controller.base_controllers[1].publish(1.0)
 
     time.sleep(2)
 
-    f.base_controller.base_controllers[0].publish(0.0)
-    f.base_controller.base_controllers[1].publish(0.0)
+    print("raising elevator")
+    f.base_controller.insert_z_pos.publish(-.2)
+
+    time.sleep(2)
+
+    print("moving base back")
+    f.base_controller.base_x_vel.publish(2.0)
+    f.base_controller.base_y_vel.publish(1.0)
+
+    time.sleep(2)
+
+    f.base_controller.base_x_vel.publish(0.0)
+    f.base_controller.base_y_vel.publish(0.0)
