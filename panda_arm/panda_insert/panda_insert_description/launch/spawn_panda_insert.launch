@@ -10,17 +10,35 @@
   <arg name="y0"          default="0" />
   <arg name="z0"          default="1" />
 
+  <arg name="pipeline" default="ompl" />
+  <arg name="use_gui" default="false" />
+
+
   <!-- Launch Gazebo -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch" if="$(arg gazebo)">
     <arg name="world_name" value="$(arg world)"/>
     <arg name="paused" value="false"/>
     <arg name="use_sim_time" value="true"/>
   </include>
-
+  
   <!-- Load translation controller parameters to param server-->  
   <rosparam file="$(find panda_insert_control)/config/panda_insert_control.yaml" command="load" />
   <rosparam file="$(find panda_insert_control)/config/panda_control.yaml" command="load" />
 
+
+    <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
+  <!-- <include file="$(find panda_moveit_config)/launch/planning_context.launch">
+    <arg name="load_robot_description" value="true"/>
+  </include> -->
+
+    <!-- We do not have a robot connected, so publish fake joint states -->
+  <!-- <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+    <param name="/use_gui" value="$(arg use_gui)"/>
+    <rosparam param="/source_list">[/move_group/fake_controller_joint_states]</rosparam>
+  </node> -->
+  <!-- <node name="joint_state_desired_publisher" pkg="topic_tools" type="relay" args="joint_states joint_states_desired" /> -->
+  
+  
   <!-- Load robot description-->
   <param name="robot_description" command="xacro $(find panda_insert_description)/urdf/panda_insert.xacro
                                           origin:='$(arg x0) $(arg y0) $(arg z0)'" />
@@ -35,18 +53,26 @@
           panda_x_joint_controller
           panda_y_joint_controller
           panda_z_joint_controller
-          panda_z_rotation_controller" ns="/panda" />
+          panda_z_rotation_controller"  
+          ns="/panda" />
+
   
   <!-- Launch robot_state_publisher -->
-  <node name="panda_moveit_robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true">
+  <node name="panda_moveit_robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen">
     <remap from="joint_states" to="panda/joint_states" />
   </node>
 
   <!-- Launch moveit -->
   <include file="$(find panda_moveit_config)/launch/move_group.launch" pass_all_args="true">
     <remap from="joint_states" to="panda/joint_states" />
+    <arg name="allow_trajectory_execution" value="true"/>
+    <arg name="fake_execution" value="false"/>
+    <arg name="info" value="true"/>
+    <arg name="pipeline" value="$(arg pipeline)"  />
   </include>
 
-  <node  pkg="rviz" type="rviz" output="screen" name="rviz" if="$(arg rviz)"/>
+  <node  pkg="rviz" type="rviz" output="screen" name="rviz" if="$(arg rviz)" args="-d $(find abstract_arm)/rviz_config/motion_planning.rviz"/>
+
+  <!-- <include file="$(find abstract_arm)/launch/moveItServer.launch"/> -->
 
 </launch>
