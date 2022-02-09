@@ -5,7 +5,7 @@
   <!-- spawn specified insert w/ moveit -->
   <group if="$(eval arm == 'panda')">
     <include file="$(find panda_insert_description)/launch/spawn_panda_insert.launch">
-      <arg name="rviz" value="true" />
+      <arg name="rviz" value="false" />
       <arg name="x0" value="0"/>
       <arg name="y0" value="0"/>
       <arg name="z0" value="1"/>
@@ -14,6 +14,7 @@
 
   <group if="$(eval arm == 'kortex')">
     <include file="$(find kortex_insert_description)/launch/spawn_kortex_insert.launch">
+      <arg name="start_rviz" value="false" />
       <arg name="x0" value="0"/>
       <arg name="y0" value="0"/>
       <arg name="z0" value="1"/>

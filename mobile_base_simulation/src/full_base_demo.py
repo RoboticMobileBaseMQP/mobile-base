@@ -5,6 +5,7 @@ from abstract_arm.moveItClient import MoveitArmClient
 import time
 import geometry_msgs.msg
 import rospy
+from math import pi
 
 class FullBaseDemo:
     def __init__(self):
@@ -37,9 +38,10 @@ if __name__ == "__main__":
     print("moving arm to a position")
     pose_goal = geometry_msgs.msg.Pose()
     pose_goal.orientation.w = 1.0
-    pose_goal.position.x = -3.0
-    pose_goal.position.y = -1.0
+    pose_goal.position.x = 0.5
+    pose_goal.position.y = -0.5
     pose_goal.position.z = 0.6
+    pose_goal.orientation.x = pi
     f.arm_controller.move_arm(pose_goal)
 
     time.sleep(2)

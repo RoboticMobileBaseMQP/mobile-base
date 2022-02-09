@@ -10,49 +10,40 @@ from abstract_arm.srv import moveToPose, moveToPoseResponse
 from std_msgs.msg import Bool
 
 class MoveItPlanner:
-    def __init__(self) -> None:
-        rospy.loginfo("Initializing node in namespace " + rospy.get_namespace())
-        
+    def __init__(self) -> None:     
         # Initialize nodes and service
         rospy.init_node("move_group_interface", anonymous=True)
         s = rospy.Service('/move_it_planner', moveToPose, self.move_arm)
         
-        # launch individual arm groups
         arm_name = rospy.get_param("/arm")
-        print(arm_name)
+        print("Initalize MoveIt for " + arm_name + " in namespace " + rospy.get_namespace())
 
+        # launch arm groups with arm specific arguments 
         if arm_name == "panda": 
-            print("Initalize MoveIt for panda")
-
             # Initialize roscpp
             joint_state_topic = ['joint_states:=/panda/joint_states'] # specific to panda. Not necessary with Kortex
             moveit_commander.roscpp_initialize(joint_state_topic)
 
             self.robot = moveit_commander.RobotCommander()
-            self.arm_group_name = "panda_arm" # arm for kortex, panda_arm for panda
-            self.scene = moveit_commander.PlanningSceneInterface() # ns=rospy.get_namespace()
-            self.arm_group = moveit_commander.MoveGroupCommander(self.arm_group_name) # ns=rospy.get_namespace()
-            self.display_trajectory_publisher = rospy.Publisher(rospy.get_namespace() + 'move_group/display_planned_path',
-                                                    moveit_msgs.msg.DisplayTrajectory,
-                                                    queue_size=20)
-        else:
-            print("initialize moveit for kortex")
-            
+            self.arm_group_name = "panda_arm"
+            self.scene = moveit_commander.PlanningSceneInterface()
+
+        else:            
             # Initialize roscpp
             moveit_commander.roscpp_initialize(sys.argv)
-            rospy.init_node("move_group_interface", anonymous=True)
 
             self.robot = moveit_commander.RobotCommander('robot_description')
             self.arm_group_name = "arm"
-            self.scene = moveit_commander.PlanningSceneInterface(ns=rospy.get_namespace()) # ns=rospy.get_namespace()
-            self.arm_group = moveit_commander.MoveGroupCommander(self.arm_group_name, ns=rospy.get_namespace())
-            self.display_trajectory_publisher = rospy.Publisher(rospy.get_namespace() + 'move_group/display_planned_path',
-                                                    moveit_msgs.msg.DisplayTrajectory,
-                                                    queue_size=20)
+            self.scene = moveit_commander.PlanningSceneInterface(ns=rospy.get_namespace())
+
+        self.arm_group = moveit_commander.MoveGroupCommander(self.arm_group_name)
+        self.display_trajectory_publisher = rospy.Publisher(rospy.get_namespace() + 'move_group/display_planned_path',
+                                                moveit_msgs.msg.DisplayTrajectory,
+                                                queue_size=20)
 
         
         self.TOLERANCE = 0.01 
-               
+
         # print(rospy.get_namespace())
 
         # planning_frame = self.arm_group.get_planning_frame()
@@ -105,8 +96,6 @@ class MoveItPlanner:
 
             bool.data = False
             return moveToPoseResponse(bool)
-
-
 
 
 if __name__ == "__main__":
