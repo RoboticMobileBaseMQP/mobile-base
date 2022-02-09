@@ -1,7 +1,8 @@
 <launch>
   <arg name="arm" default="panda" /> <!-- determines which arm to launch from command line -->
-  <param name="arm" value="$(arg arm)" />
+  <param name="arm" value="$(arg arm)" /> 
 
+  <!-- spawn specified insert w/ moveit -->
   <group if="$(eval arm == 'panda')">
     <include file="$(find panda_insert_description)/launch/spawn_panda_insert.launch">
       <arg name="rviz" value="true" />
@@ -17,11 +18,14 @@
       <arg name="y0" value="0"/>
       <arg name="z0" value="1"/>
     </include>
-
-    <include file="$(find abstract_arm)/launch/moveItServer.launch" />
   </group>
 
+  <!-- spawn moveit server -->
+  <include file="$(find abstract_arm)/launch/moveItServer.launch" pass_all_args="true"/>
+
+  <!-- spawn base -->
   <include file="$(find mobile_base_description)/launch/spawn_base.launch" />
 
+  <!-- spawn insert follower node -->
   <node pkg="abstract_arm" name="base_follower" type="base_follower.py" output="screen" />
 </launch>

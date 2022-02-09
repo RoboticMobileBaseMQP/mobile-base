@@ -26,12 +26,12 @@ class MoveitArmClient:
             c = rospy.ServiceProxy('/move_it_planner', moveToPose)
 
             # translate to base link reference frame; for some reason its always 0,0,0
-            # world2Base = self.tfBuffer.lookup_transform('world', self.arm_base_link_name, rospy.Time())
-            # pose.position.x += world2Base.transform.translation.x
-            # pose.position.y += world2Base.transform.translation.y
-            # pose.position.z += world2Base.transform.translation.z
+            world2Base = self.tfBuffer.lookup_transform('world', self.arm_base_link_name, rospy.Time())
+            pose.position.x += world2Base.transform.translation.x
+            pose.position.y += world2Base.transform.translation.y
+            pose.position.z += world2Base.transform.translation.z
 
-            # print(world2Base)
+            print(world2Base)
 
             success = c(pose)
             bool = Bool()
@@ -59,14 +59,14 @@ if __name__ == "__main__":
     pose_goal.orientation.w = 1.0
     pose_goal.position.x = 0.4
     pose_goal.position.y = -0.2
-    pose_goal.position.z = 0.4
+    pose_goal.position.z = 0.7
     print("Requesting.. ")
     m.move_arm(pose_goal)
 
     pose_goal.orientation.w = 1.0
     pose_goal.position.x = -0.4
     pose_goal.position.y = -0.2
-    pose_goal.position.z = 0.4
+    pose_goal.position.z = 0.7
     print("Requesting.. ")
     m.move_arm(pose_goal)
 

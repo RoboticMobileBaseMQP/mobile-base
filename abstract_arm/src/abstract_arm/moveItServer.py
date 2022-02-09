@@ -44,15 +44,16 @@ class MoveItPlanner:
 
             self.robot = moveit_commander.RobotCommander('robot_description')
             self.arm_group_name = "arm"
-            self.scene = moveit_commander.PlanningSceneInterface() # ns=rospy.get_namespace()
+            self.scene = moveit_commander.PlanningSceneInterface(ns=rospy.get_namespace()) # ns=rospy.get_namespace()
             self.arm_group = moveit_commander.MoveGroupCommander(self.arm_group_name, ns=rospy.get_namespace())
             self.display_trajectory_publisher = rospy.Publisher(rospy.get_namespace() + 'move_group/display_planned_path',
                                                     moveit_msgs.msg.DisplayTrajectory,
                                                     queue_size=20)
 
-        print(rospy.get_namespace())
         
-        self.TOLERANCE = 0.01        
+        self.TOLERANCE = 0.01 
+               
+        # print(rospy.get_namespace())
 
         # planning_frame = self.arm_group.get_planning_frame()
         # print("============ Planning frame: %s" % planning_frame)
