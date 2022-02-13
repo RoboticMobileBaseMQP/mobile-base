@@ -4,25 +4,26 @@ import board
 import time
 import rospy
 
-i2c_pwm = board.I2C()
-pwm = ada.PCA9685(i2c_pwm)
-
-period = .012
-pwm.frequency = 1/period # period = 10ms ish
 
 class MotorController:
     def __init__(self, init_node=False):
 
         if init_node:
             rospy.init_node("motor_controller", anonymous=True)
+
+        # setup 
+        i2c_pwm = board.I2C()
+        self.pwm = ada.PCA9685(i2c_pwm)
+
+        period = .012
+        self.pwm.frequency = 1/period # period = 10ms ish
         
         # setup topic listeners
-        
+
 
     # subscriber callback
     def callback(self):
         pass
-
 
     def translate(self, value, leftMin, leftMax, rightMin, rightMax):
         # Figure out how 'wide' each range is
@@ -46,7 +47,7 @@ class MotorController:
         # forwards: 10960
         cycle = self.translate(percent_speed, -100, 100, 5370, 10960) # found by guess and check
 
-        pwm.channels[channel].duty_cycle = int(cycle) # 0 to 65535
+        self.pwm.channels[channel].duty_cycle = int(cycle) # 0 to 65535
 
 # motor testing
 if __name__ == "__main__":

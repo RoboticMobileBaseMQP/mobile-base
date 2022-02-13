@@ -1,0 +1,5 @@
+<launch>
+    <machine name="raspberry_pi" address="" env-loader="/opt/ros/noetic/env.sh" user="raspberrypi" password="password"/> <!-- adjust user and address -->
+
+    <node machine="raspberry_pi" name="motor controller" pkg="base_package" type="motor_controller.py" output="screen" />
+</launch>
