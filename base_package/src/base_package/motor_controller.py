@@ -3,6 +3,7 @@ import adafruit_pca9685 as ada
 import board
 import time
 import rospy
+from base_package.msg import mecanum_efforts
 
 
 class MotorController:
@@ -19,11 +20,12 @@ class MotorController:
         self.pwm.frequency = 1/period # period = 10ms ish
         
         # setup topic listeners
-
+        rospy.Subscriber("/base/mecanum_efforts", mecanum_efforts, self.spin_motors)
 
     # subscriber callback
-    def callback(self):
-        pass
+    def spin_motors(self, msg):
+        for i in range(4):
+            self.set_motor_speed(i, msg[i])
 
     def translate(self, value, leftMin, leftMax, rightMin, rightMax):
         # Figure out how 'wide' each range is

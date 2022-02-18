@@ -23,7 +23,7 @@ class MecanumNode:
         base_controller_str = "/base/base_{0}_joint_controller/command"
         self.xBaseController = rospy.Publisher(base_controller_str.format('x'), Float64, queue_size=10)
         self.yBaseController = rospy.Publisher(base_controller_str.format('y'), Float64, queue_size=10)
-        self.zBaseController = rospy.Publisher("/base/base_z_rotation_controller/command", Float64, queue_size=10)
+        self.zBaseController = rospy.Publisher("/base/base_z_rotation_contrmloller/command", Float64, queue_size=10)
 
 
     def sendEfforts(self, msg):
