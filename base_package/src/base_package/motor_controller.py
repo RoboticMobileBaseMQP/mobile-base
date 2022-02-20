@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import RPi.GPIO as GPIO
 import adafruit_pca9685 as ada
 import board
