@@ -6,4 +6,6 @@
     <node machine="raspberry_pi" name="motor_controller" pkg="base_package" type="motor_controller.py" output="screen" />
 
     <node name="mecanum_logic" pkg="base_package" type="mecanum_logic.py" output="screen" />
+
+    <node name="joy_controller" pkg="joy" type="joy_node" output="screen" />
 </launch>

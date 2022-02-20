@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import rospy
-from sensor_msgs import Joy
+from sensor_msgs.msg import Joy
 from std_msgs.msg import Float64
 from base_package.msg import mecanum_efforts
 
@@ -33,19 +33,19 @@ class MecanumNode:
 
         L_JoyX = msg.axes[0]
         L_JoyY = msg.axes[1] # potentially multiply this value by 1.1 to counteract imperfect strafing!
-        R__JoyX = msg.axes[2]
+        R_JoyX = msg.axes[2]
 
-        demoninator = max(abs(L_JoyX) + abs(L_JoyY) + abs(R__JoyX), 1)
+        demoninator = max(abs(L_JoyX) + abs(L_JoyY) + abs(R_JoyX), 1)
 
         # Front of robot
         # 1 3
         # 2 4
         # Rear of Robot
 
-        cim1Effort = Float64((L_JoyY + L_JoyX + R__JoyX) / demoninator * 100)
-        cim2Effort = Float64((L_JoyY - L_JoyX + R__JoyX) / demoninator * 100)
-        cim3Effort = Float64((L_JoyY - L_JoyX - R__JoyX) / demoninator * 100)
-        cim4Effort = Float64((L_JoyY + L_JoyX - R__JoyX) / demoninator * 100)
+        cim1Effort = Float64((L_JoyY + L_JoyX + R_JoyX) / demoninator * 100)
+        cim2Effort = Float64((L_JoyY - L_JoyX + R_JoyX) / demoninator * 100)
+        cim3Effort = Float64((L_JoyY - L_JoyX - R_JoyX) / demoninator * 100)
+        cim4Effort = Float64((L_JoyY + L_JoyX - R_JoyX) / demoninator * 100)
 
         self.efforts.publish([cim1Effort, cim2Effort, cim3Effort, cim4Effort])
 
