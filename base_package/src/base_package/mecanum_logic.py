@@ -2,28 +2,31 @@
 
 import rospy
 from sensor_msgs.msg import Joy
-from std_msgs.msg import Float64
+from std_msgs.msg import Float64, Float64MultiArray
 from base_package.msg import mecanum_efforts
 
 
 class MecanumNode:
-    def __init__(self) -> None:
+    def __init__(self, init_node=False):
+
+        if init_node:
+            rospy.init_node("mecanum_logic", anonymous=True)
 
         # Listen to the xbox controller!
-        rospy.Subscriber("/base/teleop_input", Joy, self.sendEfforts)
+        rospy.Subscriber("/joy", Joy, self.sendEfforts)
 
         # TODO
         # Listen to reported encoder values
         rospy.Subscriber("/base/mecanum_encoders", mecanum_efforts, self.updatePosition)
 
         # Publish calculated efforts to low level controllers
-        self.efforts = rospy.Publisher("/base/mecanum_efforts", mecanum_efforts, queue_size=10)
+        self.mecanum_efforts = rospy.Publisher("/base/mecanum_efforts", mecanum_efforts, queue_size=10)
 
         # Publish updates to Simulation
         base_controller_str = "/base/base_{0}_joint_controller/command"
         self.xBaseController = rospy.Publisher(base_controller_str.format('x'), Float64, queue_size=10)
         self.yBaseController = rospy.Publisher(base_controller_str.format('y'), Float64, queue_size=10)
-        self.zBaseController = rospy.Publisher("/base/base_z_rotation_contrmloller/command", Float64, queue_size=10)
+        self.zBaseController = rospy.Publisher("/base/base_z_rotation_controller/command", Float64, queue_size=10)
 
 
     def sendEfforts(self, msg):
@@ -42,20 +45,22 @@ class MecanumNode:
         # 2 4
         # Rear of Robot
 
-        cim1Effort = Float64((L_JoyY + L_JoyX + R_JoyX) / demoninator * 100)
-        cim2Effort = Float64((L_JoyY - L_JoyX + R_JoyX) / demoninator * 100)
-        cim3Effort = Float64((L_JoyY - L_JoyX - R_JoyX) / demoninator * 100)
-        cim4Effort = Float64((L_JoyY + L_JoyX - R_JoyX) / demoninator * 100)
+        cim1Effort = (L_JoyY + L_JoyX + R_JoyX) / demoninator * 100
+        cim2Effort = (L_JoyY - L_JoyX + R_JoyX) / demoninator * 100
+        cim3Effort = (L_JoyY - L_JoyX - R_JoyX) / demoninator * 100
+        cim4Effort = (L_JoyY + L_JoyX - R_JoyX) / demoninator * 100
 
-        self.efforts.publish([cim1Effort, cim2Effort, cim3Effort, cim4Effort])
-
-
+        efforts = mecanum_efforts()
+        efforts.Efforts = [cim1Effort, cim2Effort, cim3Effort, cim4Effort]
+        self.mecanum_efforts.publish(efforts)
 
 
     def updatePosition(self, msg):
         # TODO
         # Publish rough coordinates of x base y base and z rotation to update in sim!
+        pass
 
 
-
-        return
+if __name__=="__main__":
+    m = MecanumNode(init_node=True)
+    rospy.spin()

@@ -56,6 +56,7 @@ class MotorController:
 # motor testing
 if __name__ == "__main__":
     m = MotorController(init_node=True)
+    # rospy.spin()
 
     for i in range(7):
         m.set_motor_speed(i, -100)
