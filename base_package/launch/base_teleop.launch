@@ -8,4 +8,7 @@
     <node name="mecanum_logic" pkg="base_package" type="mecanum_logic.py" output="screen" />
 
     <node name="joy_controller" pkg="joy" type="joy_node" output="screen" />
+
+    <!-- <include file="$(find abstract_arm)/launch/abstract_arm_and_base.launch" /> -->
+
 </launch>

@@ -38,6 +38,11 @@ class MecanumNode:
         L_JoyY = msg.axes[1] # potentially multiply this value by 1.1 to counteract imperfect strafing!
         R_JoyX = msg.axes[2]
 
+        # publish to simulation
+        self.xBaseController.publish(L_JoyX)
+        self.yBaseController.publish(L_JoyY)
+        self.zBaseController.publish(R_JoyX)
+
         demoninator = max(abs(L_JoyX) + abs(L_JoyY) + abs(R_JoyX), 1)
 
         # Front of robot

@@ -43,14 +43,14 @@
     <actuator name="wheel_${index}_joint_motor">
         <mechanicalReduction>1</mechanicalReduction>
     </actuator>
-    </transmission>
+    </transmission> --> 
 
     <gazebo reference="wheel_${index}">
-      <mu1 value="1.0"/>
-      <mu2 value="1.0"/>
-      <kp value="10000000.0" />
+      <mu1 value="0.0"/>
+      <mu2 value="0.0"/>
+      <!-- <kp value="10000000.0" />
       <fdir1 value="1 0 0" />
-      <turnGravityOff>false</turnGravityOff>
-    </gazebo> -->
+      <turnGravityOff>false</turnGravityOff> -->
+    </gazebo>
   </xacro:macro>
 </robot>

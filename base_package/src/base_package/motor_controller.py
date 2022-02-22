@@ -22,12 +22,19 @@ class MotorController:
         self.pwm.frequency = 1/period # period = 10ms ish
         
         # setup topic listeners
-        rospy.Subscriber("/base/mecanum_efforts", mecanum_efforts, self.spin_motors)
+        rospy.Subscriber("/base/mecanum_efforts", mecanum_efforts, self.spin_wheels)
+        rospy.Subscriber("/base/elevator_efforts", mecanum_efforts, self.spin_elevator_motors)
+
 
     # subscriber callback
-    def spin_motors(self, msg):
+    def spin_wheels(self, msg):
         for i in range(4):
             self.set_motor_speed(i, msg[i])
+    
+    # subscriber callback
+    def spin_elevator_motors(self, msg):
+        for i in range(3):
+            self.set_motor_speed(i+4, msg[i])
 
     def translate(self, value, leftMin, leftMax, rightMin, rightMax):
         # Figure out how 'wide' each range is
