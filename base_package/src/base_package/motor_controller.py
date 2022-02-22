@@ -29,12 +29,12 @@ class MotorController:
     # subscriber callback
     def spin_wheels(self, msg):
         for i in range(4):
-            self.set_motor_speed(i, msg[i])
+            self.set_motor_speed(i, msg.Efforts[i])
     
     # subscriber callback
     def spin_elevator_motors(self, msg):
         for i in range(3):
-            self.set_motor_speed(i+4, msg[i])
+            self.set_motor_speed(i+4, msg.Efforts[i])
 
     def translate(self, value, leftMin, leftMax, rightMin, rightMax):
         # Figure out how 'wide' each range is
@@ -63,14 +63,14 @@ class MotorController:
 # motor testing
 if __name__ == "__main__":
     m = MotorController(init_node=True)
-    # rospy.spin()
+    rospy.spin()
 
-    for i in range(7):
-        m.set_motor_speed(i, -100)
-    time.sleep(2)
-    for i in range(7):
-        m.set_motor_speed(i, 0)
-    time.sleep(2)
-    m.set_motor_speed(100, 0)
-    time.sleep(2)
-    m.set_motor_speed(0, 0)
+    # for i in range(7):
+    #     m.set_motor_speed(i, -100)
+    # time.sleep(2)
+    # for i in range(7):
+    #     m.set_motor_speed(i, 0)
+    # time.sleep(2)
+    # m.set_motor_speed(100, 0)
+    # time.sleep(2)
+    # m.set_motor_speed(0, 0)
