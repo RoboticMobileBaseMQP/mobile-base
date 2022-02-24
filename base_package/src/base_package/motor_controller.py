@@ -7,7 +7,7 @@ import time
 import rospy
 from base_package.msg import effort_list
 
-
+# Controls motors via i2c on raspberry pi - must be launched remotely
 class MotorController:
     def __init__(self, init_node=False):
 
@@ -64,13 +64,3 @@ class MotorController:
 if __name__ == "__main__":
     m = MotorController(init_node=True)
     rospy.spin()
-
-    # for i in range(7):
-    #     m.set_motor_speed(i, -100)
-    # time.sleep(2)
-    # for i in range(7):
-    #     m.set_motor_speed(i, 0)
-    # time.sleep(2)
-    # m.set_motor_speed(100, 0)
-    # time.sleep(2)
-    # m.set_motor_speed(0, 0)
