@@ -3,7 +3,7 @@
 import rospy
 from sensor_msgs.msg import Joy
 from std_msgs.msg import Float64, Float64MultiArray
-from base_package.msg import mecanum_efforts
+from base_package.msg import effort_list
 
 
 class ElevatorNode:
@@ -20,7 +20,7 @@ class ElevatorNode:
         rospy.Subscriber("/base/elevator_encoders", None, self.updatePosition)
 
         # Publish calculated efforts to low level controllers
-        self.elevator_efforts = rospy.Publisher("/base/elevator_efforts", mecanum_efforts, queue_size=10)
+        self.elevator_efforts = rospy.Publisher("/base/elevator_efforts", effort_list, queue_size=10)
 
         # Publish updates to Simulation
         arm_name = rospy.get_param("arm")
@@ -36,7 +36,7 @@ class ElevatorNode:
 
         R_Trig = msg.axes[4]
 
-        efforts = mecanum_efforts()
+        efforts = effort_list()
         
         efforts.Efforts = [cim1Effort, cim2Effort, cim3Effort]
         #

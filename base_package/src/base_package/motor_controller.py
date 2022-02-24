@@ -5,7 +5,7 @@ import adafruit_pca9685 as ada
 import board
 import time
 import rospy
-from base_package.msg import mecanum_efforts
+from base_package.msg import effort_list
 
 
 class MotorController:
@@ -22,8 +22,8 @@ class MotorController:
         self.pwm.frequency = 1/period # period = 10ms ish
         
         # setup topic listeners
-        rospy.Subscriber("/base/mecanum_efforts", mecanum_efforts, self.spin_wheels)
-        rospy.Subscriber("/base/elevator_efforts", mecanum_efforts, self.spin_elevator_motors)
+        rospy.Subscriber("/base/mecanum_efforts", effort_list, self.spin_wheels)
+        rospy.Subscriber("/base/elevator_efforts", effort_list, self.spin_elevator_motors)
 
 
     # subscriber callback
