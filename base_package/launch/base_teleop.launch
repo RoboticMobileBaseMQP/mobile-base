@@ -1,0 +1,14 @@
+<launch>
+    <!-- NOTE: you must add "raspberrypi <rpi's address> to /etc/hosts for rpi to resolve its ip correctly"-->
+    <machine name="raspberry_pi" address="raspberrypi" env-loader="/home/pi/Documents/MQP_ws/devel/env.sh" user="pi" password="password" /> 
+    <!-- yes I know password is bad, no I don't care -->
+
+    <node machine="raspberry_pi" name="motor_controller" pkg="base_package" type="motor_controller.py" output="screen" />
+
+    <node name="mecanum_logic" pkg="base_package" type="mecanum_logic.py" output="screen" />
+
+    <node name="joy_controller" pkg="joy" type="joy_node" output="screen" />
+
+    <!-- <include file="$(find abstract_arm)/launch/abstract_arm_and_base.launch" /> -->
+
+</launch>
