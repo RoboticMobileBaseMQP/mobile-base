@@ -123,13 +123,19 @@ def main():
         smach.StateMachine.add('TASK_PROGRESS', Task_Progress(), 
                                transitions={'task_complete':'IDLE', 
                                             'move_base':'BASE'})
+
+
         smach.StateMachine.add('BASE', Base(), 
                                transitions={'check_elevator':'ELEVATOR_CHECK'})
+
+
         smach.StateMachine.add('ELEVATOR_CHECK', Elevator_Goal_Check(), 
                                transitions={'move_elevator':'ELEVATOR',
                                             'check_arm':'ARM_CHECK'})
         smach.StateMachine.add('ELEVATOR', Elevator(), 
                                transitions={'check_arm':'ARM_CHECK'})
+
+
         smach.StateMachine.add('ARM_CHECK', Arm_Goal_Check(), 
                                transitions={'move_arm':'ARM',
                                             'task_progress':'TASK_PROGRESS'})
