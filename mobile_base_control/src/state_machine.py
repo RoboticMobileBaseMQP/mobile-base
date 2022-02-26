@@ -41,7 +41,7 @@ class Task_Progress(smach.State):
 class Base(smach.State):
     def __init__(self):
         smach.State.__init__(self,
-                             outcomes=['move_elevator'])
+                             outcomes=['check_elevator'])
     
     def execute(self, userdata):
         rospy.loginfo('Moving base in Base state')
@@ -49,12 +49,27 @@ class Base(smach.State):
         time.sleep(3)
         # move base code goes here
 
-        return 'move_elevator'
+        return 'check_elevator'
+
+class Elevator_Goal_Check(smach.State):
+    def __init__(self):
+        smach.State.__init__(self,
+                             outcomes=['move_elevator', 'check_arm'])
+
+    def execute(self, userdata):
+        rospy.loginfo('Checking if elevator needs to be moved')
+
+        # get elevator position
+        
+        if True: #if elevator needs to be moved 
+            return 'move_elevator'
+        else: # otherwise skip to arm check
+            return 'check_arm'
 
 class Elevator(smach.State):
     def __init__(self):
         smach.State.__init__(self,
-                             outcomes=['move_arm'])
+                             outcomes=['check_arm'])
     
     def execute(self, userdata):
         rospy.loginfo('Moving jacks in Elevator state')
@@ -62,12 +77,27 @@ class Elevator(smach.State):
         time.sleep(3)
         # move elevator code goes here
 
-        return 'move_arm'
+        return 'check_arm'
+
+class Arm_Goal_Check(smach.State):
+    def __init__(self):
+        smach.State.__init__(self,
+                             outcomes=['move_arm', 'task_progress'])
+
+    def execute(self, userdata):
+        rospy.loginfo('Checking if arm needs to be moved')
+
+        # get arm position
+        
+        if True: # if arm needs to be moved 
+            return 'move_arm'
+        else: # otherwise check if task is complete
+            return 'task_progress'
 
 class Arm(smach.State):
     def __init__(self):
         smach.State.__init__(self,
-                             outcomes=['task_complete'])
+                             outcomes=['task_progress'])
     
     def execute(self, userdata):
         rospy.loginfo('Moving arm in Arm state')
@@ -75,7 +105,7 @@ class Arm(smach.State):
         time.sleep(3)
         # move arm code goes here
 
-        return 'task_complete'
+        return 'task_progress'
 
 def main():
     rospy.init_node('robot_state_machine')
@@ -94,12 +124,17 @@ def main():
                                transitions={'task_complete':'IDLE', 
                                             'move_base':'BASE'})
         smach.StateMachine.add('BASE', Base(), 
-                               transitions={'move_elevator':'ELEVATOR'})
+                               transitions={'check_elevator':'ELEVATOR_CHECK'})
+        smach.StateMachine.add('ELEVATOR_CHECK', Elevator_Goal_Check(), 
+                               transitions={'move_elevator':'ELEVATOR',
+                                            'check_arm':'ARM_CHECK'})
         smach.StateMachine.add('ELEVATOR', Elevator(), 
-                               transitions={'move_arm':'ARM'})
+                               transitions={'check_arm':'ARM_CHECK'})
+        smach.StateMachine.add('ARM_CHECK', Arm_Goal_Check(), 
+                               transitions={'move_arm':'ARM',
+                                            'task_progress':'TASK_PROGRESS'})
         smach.StateMachine.add('ARM', Arm(), 
-                               transitions={'task_complete':'TASK_PROGRESS'})
-        
+                               transitions={'task_progress':'TASK_PROGRESS'})
 
 
     # Execute SMACH plan
