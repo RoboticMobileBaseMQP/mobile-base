@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from readline import set_completer
 import RPi.GPIO as GPIO
 import adafruit_pca9685 as ada
 import board
@@ -64,3 +65,7 @@ class MotorController:
 if __name__ == "__main__":
     m = MotorController(init_node=True)
     rospy.spin()
+
+    # if interrupted, stop all motors
+    for i in range(7):
+        m.set_motor_speed(i, 0)
