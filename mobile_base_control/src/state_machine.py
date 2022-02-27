@@ -19,7 +19,7 @@ class Idle(smach.State):
 
     def callback(self, msg):
         self.mutex.acquire()
-        self.received_task = msg.content # TODO
+        self.received_task = msg.content # TODO: add to a queue
         self.mutex.release()
         pass
 
