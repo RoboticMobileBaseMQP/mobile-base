@@ -8,7 +8,7 @@
         <!-- yes I know password is bad, no I don't care -->
 
         <node machine="raspberry_pi" name="motor_controller" pkg="base_package" type="motor_controller.py" output="screen" />
-        <!-- <node machine="raspberry_pi" name="encoder_reader" pkg="base_package" type="jack_encoder_readings.py" output="screen" /> -->
+        <node machine="raspberry_pi" name="encoder_reader" pkg="base_package" type="jack_encoder_readings.py" output="screen" />
     </group>
 
     <node name="mecanum_logic" pkg="base_package" type="mecanum_logic.py" output="screen" />

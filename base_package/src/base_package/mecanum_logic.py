@@ -36,7 +36,7 @@ class MecanumNode:
 
         L_JoyX = msg.axes[0]
         L_JoyY = msg.axes[1] # potentially multiply this value by 1.1 to counteract imperfect strafing!
-        R_JoyX = msg.axes[2]
+        R_JoyX = -1*msg.axes[2] # flip rotation direction
 
         # publish to simulation
         self.xBaseController.publish(L_JoyX)

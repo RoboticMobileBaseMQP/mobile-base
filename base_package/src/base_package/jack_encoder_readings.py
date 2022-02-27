@@ -5,6 +5,7 @@ import time
 import sys
 import Encoder
 import rospy
+from std_msgs.msg import Int64
 from base_package.msg import encoder_values
 # import special message type of a list of 3 int64's
 
@@ -41,12 +42,13 @@ class JackEncoderReader:
         print("publishing values")
         
         while not rospy.is_shutdown():
+            
             rightJack = self.encR.read()
             leftJack = self.encL.read()
             backJack = self.encB.read()
             
             # rostopic publishing
-            values.Values = [rightJack, leftJack, backJack]
+            values.Values = [Int64(rightJack), Int64(leftJack), Int64(backJack)]
             self.jackEncoders.publish(values)            
 
 
