@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-from readline import set_completer
 import RPi.GPIO as GPIO
 import adafruit_pca9685 as ada
 import board

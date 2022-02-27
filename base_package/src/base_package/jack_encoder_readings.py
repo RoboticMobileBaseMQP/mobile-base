@@ -6,17 +6,17 @@ import sys
 import Encoder
 import rospy
 from std_msgs import int64
+from base_package.msg import encoder_values
 # import special message type of a list of 3 int64's
 
 
-class JackEncoderReading:
-    
+class JackEncoderReader:
     def __init__(self, init_node=False):
         
         if init_node:
             rospy.init_node("jack_encoder_readings", anonymous=True)
         
-        self.jackEncoders = rospy.Publisher("/base/Elevator/encoderValues", encoderValues, queue_size=10)
+        self.jackEncoders = rospy.Publisher("/base/elevator/encoderValues", encoder_values, queue_size=10)
         # Jack Right A  = JRa
         JRa = 27
         JRb = 22
@@ -25,9 +25,9 @@ class JackEncoderReading:
         JLa = 24
         JLb = 23
 
-        encR= Encoder.Encoder(JRa, JRb)
-        encL = Encoder.Encoder(JLa, JLb)
-        encB = Encoder.Encoder(JBa, JBb)
+        self.encR = Encoder.Encoder(JRa, JRb)
+        self.encL = Encoder.Encoder(JLa, JLb)
+        self.encB = Encoder.Encoder(JBa, JBb)
 
     def home_config(self):
         # TODO
@@ -36,26 +36,20 @@ class JackEncoderReading:
         return
         
     def main(self):
-        if home_config == True:
-            home_config()
-        
+        # if home_config == True:
+        #     home_config()
+        values = encoder_values()
         
         while True:
-            rightJack = encR.read()
-            leftJack = encL.read()
-            backJack = encB.read()
-            
-            
+            rightJack = self.encR.read()
+            leftJack = self.encL.read()
+            backJack = self.encB.read()
             
             # rostopic publishing
-            # values.Values = [int64(rightJack), int64(leftJack), int64(backJack)]
-            # self.encoder_values.publish(values)
-            
+            values.Values = [int64(rightJack), int64(leftJack), int64(backJack)]
+            self.encoder_values.publish(values)            
 
 
-if __name__ == "__main__"
-    encoderReadings = JackEncoderReadings()
-    rospy.spin()
-    
-
-    
+if __name__ == "__main__":
+    j = JackEncoderReader()
+    j.main()
