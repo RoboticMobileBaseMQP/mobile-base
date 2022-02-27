@@ -40,7 +40,7 @@ class JackEncoderReader:
         values = encoder_values()
         print("publishing values")
         
-        while not rospy.is_shutdown:
+        while not rospy.is_shutdown():
             rightJack = self.encR.read()
             leftJack = self.encL.read()
             backJack = self.encB.read()
