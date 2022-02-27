@@ -46,7 +46,7 @@ class JackEncoderReader:
             
             # rostopic publishing
             values.Values = [rightJack, leftJack, backJack]
-            self.encoder_values.publish(values)            
+            self.jackEncoders.publish(values)            
 
 
 if __name__ == "__main__":
