@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 
+from readline import set_completer
 import RPi.GPIO as GPIO
 import adafruit_pca9685 as ada
 import board
 import time
 import rospy
-from base_package.msg import mecanum_efforts
+from base_package.msg import effort_list
 
-
+# Controls motors via i2c on raspberry pi - must be launched remotely
 class MotorController:
     def __init__(self, init_node=False):
 
@@ -22,8 +23,8 @@ class MotorController:
         self.pwm.frequency = 1/period # period = 10ms ish
         
         # setup topic listeners
-        rospy.Subscriber("/base/mecanum_efforts", mecanum_efforts, self.spin_wheels)
-        rospy.Subscriber("/base/elevator_efforts", mecanum_efforts, self.spin_elevator_motors)
+        rospy.Subscriber("/base/mecanum_efforts", effort_list, self.spin_wheels)
+        rospy.Subscriber("/base/elevator_efforts", effort_list, self.spin_elevator_motors)
 
 
     # subscriber callback
@@ -65,12 +66,6 @@ if __name__ == "__main__":
     m = MotorController(init_node=True)
     rospy.spin()
 
-    # for i in range(7):
-    #     m.set_motor_speed(i, -100)
-    # time.sleep(2)
-    # for i in range(7):
-    #     m.set_motor_speed(i, 0)
-    # time.sleep(2)
-    # m.set_motor_speed(100, 0)
-    # time.sleep(2)
-    # m.set_motor_speed(0, 0)
+    # if interrupted, stop all motors
+    for i in range(7):
+        m.set_motor_speed(i, 0)

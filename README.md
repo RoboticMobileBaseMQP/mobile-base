@@ -6,19 +6,15 @@ Repository for the description and gazebo simulation of a Mobile Robotic Base, a
 
 This simulation was built using ROS-Noetic. 
 
-The mobile base also requires ros-kortex for simulating the robotic arm. Follow the installation instructions [here](https://github.com/Kinovarobotics/ros_kortex/tree/d53b135d3741bb265bb6908f59600fa03dbc2dc9).
-
-### NOTE
-
-To get the kortex arm to move in the simulation, `kortex_arm/ros_kortex/kortex_description/robots/kortex_robot.xacro` has a line that links the arm to the world. Comment out lines 25-32 in that file (`<xacro:if value="${sim}">...`).
-
-Also, to get the insert's position controllers to work, comment out lines 64-68 in the above file (`<gazebo> <plugin name=...`).
-
-The same applies to the panda controller. Comment out lines 41-46 (`<link name="world"...`) and lines 63-70 (`<gazebo>...`) in `panda_arm/franka_ros/franka_description/robots/panda_arm.urdf.xacro`. 
-
 ## Usage
 
-This simulation is still in early development. To run the simulation with both the base and arm, launch the following command in a terminal:
+This simulation is still in development. To run a simulation with both the base and arm, launch the following command in a terminal, specifying the arm argument as either "panda" or "kortex":
 
-`roslaunch mobile_base_simulation arm_and_base.launch`
+`roslaunch mobile_base_simulation abstract_arm_and_base.launch arm:=<arm>`
 
+
+To connect to the base and run teleop, run this command: 
+
+`roslaunch base_package base_teleop.launch`
+
+Note that ROS will try to connect to a host called "raspberrypi" to launch some low level control nodes. You will need to add the line `raspberrypi <raspberry pi's ip address>` to `/etc/hosts` on the host computer, and setup both computers according to the [ROS network config](http://wiki.ros.org/ROS/NetworkSetup), namely ROS_MASTER_URI and ROS_HOSTNAME.

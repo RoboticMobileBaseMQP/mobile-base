@@ -20,13 +20,13 @@ if __name__ == "__main__":
     f = FullBaseDemo()
 
     print("moving base")
-    f.base_controller.base_z_rotation_pos.publish(0.0)
+    f.base_controller.base_z_rotation_pos.publish(1.0)
     f.base_controller.base_x_vel.publish(-2.0)
     f.base_controller.base_y_vel.publish(-1.0)
-    f.base_controller.base_z_rotation_pos.publish(0.0)
-
+    
     time.sleep(2)
 
+    f.base_controller.base_z_rotation_pos.publish(0.0)
     f.base_controller.base_x_vel.publish(0.0)
     f.base_controller.base_y_vel.publish(0.0)
 
