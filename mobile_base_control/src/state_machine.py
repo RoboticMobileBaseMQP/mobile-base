@@ -3,6 +3,7 @@
 import rospy
 import smach
 import time
+import threading
 
 # define Idle State
 class Idle(smach.State):
@@ -10,18 +11,37 @@ class Idle(smach.State):
         smach.State.__init__(self, 
                              outcomes=['swap','task_progress', 'shutdown'])
 
+        self.mutex = threading.Lock()
+        self.received_task = None
+
+        task_queue_subscriber = rospy.Subscriber('/task-topic', None, self.callback) # TODO
+        
+
+    def callback(self, msg):
+        self.mutex.acquire()
+        self.received_task = msg.content # TODO
+        self.mutex.release()
+        pass
+
     def execute(self, userdata):
         rospy.loginfo('Sitting in Idle state')
+        waiting_for_task = True
 
-        # poll for a task?
-        # read from userdata?
+        # spin while waiting for next task
+        while not waiting_for_task:
+            self.mutex.acquire()
+            if self.received_task:
+                waiting_for_task = False
+            self.mutex.release()
         
-        if True: # if there is a task
+        # userdata.task_out = self.received_task
+
+        if True: # if task is not shutdown
             if False: # if task=swap_arm
                 return 'swap'
             else:
                 return 'task_progress'
-        else: # if no task
+        else: # if task is shutdown
             return 'shutdown'
 
 class Task_Progress(smach.State):
@@ -112,6 +132,11 @@ def main():
 
     # Create a SMACH state machine
     sm = smach.StateMachine(outcomes=['SHUTDOWN']) # add ERROR state?
+    sm.userdata.task_progress = {
+        'base_moved': False,
+        'elevator_moved': False,
+        'arm_moved': False,
+    }
 
     # Open the container
     with sm:
@@ -142,9 +167,15 @@ def main():
         smach.StateMachine.add('ARM', Arm(), 
                                transitions={'task_progress':'TASK_PROGRESS'})
 
+    # Create and start the introspection server
+    # sis = smach_ros.IntrospectionServer('robot_state_machine', sm, '/SM_ROOT')
+    # sis.start()
 
     # Execute SMACH plan
     outcome = sm.execute()
+
+    rospy.spin()
+    # sis.stop()
 
 
 if __name__ == '__main__':
