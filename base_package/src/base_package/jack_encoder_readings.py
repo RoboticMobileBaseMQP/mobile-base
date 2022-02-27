@@ -50,5 +50,5 @@ class JackEncoderReader:
 
 
 if __name__ == "__main__":
-    j = JackEncoderReader()
+    j = JackEncoderReader(init_node=True)
     j.main()
