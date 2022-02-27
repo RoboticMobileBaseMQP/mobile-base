@@ -50,10 +50,10 @@ class MecanumNode:
         # 2 4
         # Rear of Robot
 
-        cim1Effort = (R_JoyX + L_JoyY + L_JoyX) / demoninator * 100
-        cim2Effort = (R_JoyX - L_JoyY + L_JoyX) / demoninator * 100
-        cim3Effort = (R_JoyX - L_JoyY - L_JoyX) / demoninator * 100
-        cim4Effort = (R_JoyX + L_JoyY - L_JoyX) / demoninator * 100
+        cim1Effort = (R_JoyX + L_JoyX + L_JoyY) / demoninator * 100
+        cim2Effort = (R_JoyX - L_JoyX + L_JoyY) / demoninator * 100
+        cim3Effort = (R_JoyX - L_JoyX - L_JoyY) / demoninator * 100
+        cim4Effort = (R_JoyX + L_JoyX - L_JoyY) / demoninator * 100
 
         efforts = effort_list()
         efforts.Efforts = [cim1Effort, cim2Effort, cim3Effort, cim4Effort]
