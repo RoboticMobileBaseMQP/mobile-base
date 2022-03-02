@@ -5,7 +5,7 @@ import adafruit_pca9685 as ada
 import board
 import time
 import rospy
-from base_package.msg import effort_list
+from base_package.msg import effort_list, encoder_values
 
 # Controls motors via i2c on raspberry pi - must be launched remotely
 class MotorController:
@@ -14,7 +14,7 @@ class MotorController:
         if init_node:
             rospy.init_node("motor_controller", anonymous=True)
 
-        # setup 
+        # setup i2c
         i2c_pwm = board.I2C()
         self.pwm = ada.PCA9685(i2c_pwm)
 
@@ -26,12 +26,12 @@ class MotorController:
         rospy.Subscriber("/base/elevator_efforts", effort_list, self.spin_elevator_motors)
 
 
-    # subscriber callback
+    # drive callback
     def spin_wheels(self, msg):
         for i in range(4):
             self.set_motor_speed(i, msg.Efforts[i])
     
-    # subscriber callback
+    # jack callback
     def spin_elevator_motors(self, msg):
         for i in range(3):
             self.set_motor_speed(i+4, msg.Efforts[i])
