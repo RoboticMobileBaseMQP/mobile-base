@@ -48,7 +48,7 @@ class JackEncoderReader:
             backJack = self.encB.read()
             
             # rostopic publishing
-            values.Values = [Int64(rightJack), Int64(leftJack), Int64(backJack)]
+            values.Values = [int(rightJack), int(leftJack), int(backJack)]
             self.jackEncoders.publish(values)            
 
 
