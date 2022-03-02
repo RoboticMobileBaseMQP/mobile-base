@@ -29,13 +29,16 @@ class JackEncoderReader:
         self.encL = Encoder.Encoder(JLa, JLb)
         self.encB = Encoder.Encoder(JBa, JBb)
 
+        self.encR_zero, self.encL_zero, self.encB_zero = 0, 0, 0
+
         self.encoder_writer = rospy.Subscriber("/base/elevator_efforts", effort_list, self.check_encoder_reset)
 
     def check_encoder_reset(self, msg):
         if msg.Reset:
-            self.encR.write(0)
-            self.encL.write(0)
-            self.encB.write(0)
+            print("resetting zero")
+            self.encR_zero = self.encR.read()
+            self.encL_zero = self.encL.read()
+            self.encB_zero = self.encB.read()
     
     def home_config(self):
         # TODO
@@ -50,10 +53,10 @@ class JackEncoderReader:
         print("publishing values")
         
         while not rospy.is_shutdown():
-            
-            rightJack = self.encR.read()
-            leftJack = self.encL.read()
-            backJack = self.encB.read()
+            # read encoder values relative to their zeroed value
+            rightJack = self.encR.read() - self.encR_zero 
+            leftJack = self.encL.read() - self.encL_zero 
+            backJack = self.encB.read() - self.encB_zero 
             
             # rostopic publishing
             values.Values = [int(rightJack), int(leftJack), int(backJack)]

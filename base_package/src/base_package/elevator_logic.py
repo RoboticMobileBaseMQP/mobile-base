@@ -34,7 +34,7 @@ class ElevatorNode:
         # helper function to send Effort values to cim motors
         # msg [Joy]
 
-        speed = 20 if msg.axes[4] < .5 else 100 # right trigger = fast mode
+        speed = 100 if msg.axes[4] < .5 else 20 # right trigger = fast mode
 
         left_jack = speed*(msg.buttons[0] + -msg.buttons[1]) # B up A down
         back_jack = speed*(msg.buttons[2] + -msg.buttons[3]) # Y up X down
