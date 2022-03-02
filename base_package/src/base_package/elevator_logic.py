@@ -41,7 +41,7 @@ class ElevatorNode:
         right_jack = speed*(msg.buttons[4] + -msg.buttons[5]) # RB up LB down
 
         if msg.axes[7]:
-            self.efforts.Efforts = [speed*el for el in [msg.axes[7]*3]] # moves all 3 jacks
+            self.efforts.Efforts = [-speed*el for el in [msg.axes[7]]*3] # moves all 3 jacks
         else: 
             self.efforts.Efforts = [left_jack, back_jack, right_jack] # moves each jack individually
         
