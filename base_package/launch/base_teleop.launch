@@ -12,7 +12,7 @@
     </group>
 
     <node name="mecanum_logic" pkg="base_package" type="mecanum_logic.py" output="screen" />
-    <!-- <node name="elevator_logic" pkg="base_package" type="elevator_logic.py" output="screen" /> -->
+    <node name="elevator_logic" pkg="base_package" type="elevator_logic.py" output="screen" />
 
     <node name="joy_controller" pkg="joy" type="joy_node" output="screen" />
 
