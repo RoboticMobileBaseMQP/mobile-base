@@ -105,6 +105,7 @@ class TeleOpDemo(threading.Thread):
         self.publish_to_all((0,0,0,0,0,0))
     
     def publish_to_all(self, twist):
+        print(twist[0])
         for i in range(4):
             modifier = twist[4] if i<3 else twist[5] # velocity vs turn speed
 

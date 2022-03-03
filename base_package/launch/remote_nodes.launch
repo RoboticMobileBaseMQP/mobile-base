@@ -1,0 +1,4 @@
+<launch>
+    <node name="motor_controller" pkg="base_package" type="motor_controller.py" output="screen" />
+    <node name="encoder_reader" pkg="base_package" type="jack_encoder_readings.py" output="screen" />
+</launch>
