@@ -18,7 +18,7 @@ class Idle(smach.State):
         self.mutex = threading.Lock()
         self.received_task = None
 
-        task_queue_subscriber = rospy.Subscriber('/task-topic', None, self.callback) # TODO
+        #task_queue_subscriber = rospy.Subscriber('/task-topic', None, self.callback) # TODO
         
 
     def callback(self, msg):
@@ -69,7 +69,7 @@ class Task_Progress(smach.State):
         if all(userdata.task_progress_in.values()): # if all task components are complete
             return 'idle'
 
-        userdata.task_progress_in = userdata.task_progress_out
+        userdata.task_progress_out = userdata.task_progress_in
         userdata.home_position_out = False
 
         # check arm in home pos (TODO: service)
@@ -120,7 +120,7 @@ class Elevator_Goal_Check(smach.State):
     def execute(self, userdata):
         rospy.loginfo('Checking if elevator needs to be moved')
 
-        userdata.task_progress_in = userdata.task_progress_out
+        userdata.task_progress_out = userdata.task_progress_in
         userdata.home_position_out = False
         
         if userdata.task_progress_in['elevator_moved']:
@@ -165,7 +165,7 @@ class Arm_Goal_Check(smach.State):
     def execute(self, userdata):
         rospy.loginfo('Checking if arm needs to be moved')
 
-        userdata.task_progress_in = userdata.task_progress_out
+        userdata.task_progress_out = userdata.task_progress_in
         userdata.home_position_out = False
         
         if userdata.task_progress_in['arm_moved']:
