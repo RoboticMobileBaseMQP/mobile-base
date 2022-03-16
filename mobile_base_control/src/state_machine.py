@@ -66,6 +66,8 @@ class Task_Progress(smach.State):
     def execute(self, userdata):
         rospy.loginfo('Passing through Task_Progress state')
 
+        print("    " + str(userdata.task_progress_in))
+
         if all(userdata.task_progress_in.values()): # if all task components are complete
             return 'idle'
 
@@ -136,6 +138,7 @@ class Elevator(smach.State):
                              output_keys=['task_progress_out'])
     
     def execute(self, userdata):
+        global current_task
         rospy.loginfo('Moving jacks in Elevator state')
 
         # if elevator needs to be homed, home it and go back to task progress
@@ -181,6 +184,7 @@ class Arm(smach.State):
                              output_keys=['task_progress_out'])
     
     def execute(self, userdata):
+        global current_task
         rospy.loginfo('Moving arm in Arm state')
 
         # if arm needs to be homed, home it and go back to task progress
