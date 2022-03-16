@@ -1,15 +1,19 @@
 #!/usr/bin/env python3
 
+from flask import current_app
 import rospy
 import smach
 import time
 import threading
 
+current_task = None
+
 # define Idle State
 class Idle(smach.State):
     def __init__(self):
         smach.State.__init__(self, 
-                             outcomes=['swap','task_progress', 'shutdown'])
+                             outcomes=['swap','task_progress', 'shutdown'],
+                             output_keys=['task_progress_out'])
 
         self.mutex = threading.Lock()
         self.received_task = None
@@ -24,35 +28,45 @@ class Idle(smach.State):
         pass
 
     def execute(self, userdata):
+        global current_task
         rospy.loginfo('Sitting in Idle state')
         waiting_for_task = True
 
         # spin while waiting for next task
         while not waiting_for_task:
             self.mutex.acquire()
-            if self.received_task:
+            if self.received_task: # if queue is not empty
                 waiting_for_task = False
+                current_task = self.received_task # pop from queue
             self.mutex.release()
         
-        # userdata.task_out = self.received_task
+        # after receiving task, all progress is reset
+        userdata.task_progress_out = {'base': False,
+                                      'elevator': False,
+                                      'arm': False,
+                                      'gripper': False} # might not need gripper
 
-        if True: # if task is not shutdown
-            if False: # if task=swap_arm
+        if True: # if task_type is not shutdown
+            if False: # if task_type==swap_arm
                 return 'swap'
             else:
                 return 'task_progress'
-        else: # if task is shutdown
+        else: # if task_type is shutdown
             return 'shutdown'
 
 class Task_Progress(smach.State):
     def __init__(self):
         smach.State.__init__(self, 
-                             outcomes=['task_complete', 'move_base'])
+                             outcomes=['task_complete', 'move_base'],
+                             input_keys=['task_progress_in'],
+                             output_keys=['task_progress_out', 'next_value'])
 
     def execute(self, userdata):
         rospy.loginfo('Passing through Task_Progress state')
 
         # get state of current task
+        
+
         if False: # if task complete
             return 'task_complete'
 
