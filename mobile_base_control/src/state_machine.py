@@ -41,11 +41,13 @@ class Idle(smach.State):
             self.mutex.release()
         
         # after receiving task, all progress is reset
-        userdata.task_progress_out = {'base': False,
-                                      'elevator': False,
-                                      'arm': False,
-                                      'gripper': False} # might not need gripper
+        userdata.task_progress_out = {
+            'base_moved': False,
+            'elevator_moved': False,
+            'arm_moved': False,
+        }
 
+        # TODO: 
         if True: # if task_type is not shutdown
             if False: # if task_type==swap_arm
                 return 'swap'
@@ -57,87 +59,144 @@ class Idle(smach.State):
 class Task_Progress(smach.State):
     def __init__(self):
         smach.State.__init__(self, 
-                             outcomes=['task_complete', 'move_base'],
+                             outcomes=['idle', 'move_base'],
                              input_keys=['task_progress_in'],
-                             output_keys=['task_progress_out', 'next_value'])
+                             output_keys=['task_progress_out', 'home_position_out'])
 
     def execute(self, userdata):
         rospy.loginfo('Passing through Task_Progress state')
 
-        # get state of current task
-        
+        if all(userdata.task_progress_in.values()): # if all task components are complete
+            return 'idle'
 
-        if False: # if task complete
-            return 'task_complete'
+        userdata.task_progress_in = userdata.task_progress_out
+        userdata.home_position_out = False
 
-        return 'move_base'
+        # check arm in home pos (TODO: service)
+        if False:
+            userdata.home_position_out = True
+            return 'move_arm'
+
+        # check elevator in home pos (TODO: service)
+        if False:
+            userdata.home_position_out = True
+            return 'move_elevator'
+
+        # check if base has moved yet
+        if userdata.task_progress_in['base_moved']:
+            return 'check_elevator'
+        else:
+            return 'move_base'
 
 class Base(smach.State):
     def __init__(self):
         smach.State.__init__(self,
-                             outcomes=['check_elevator'])
+                             outcomes=['check_elevator'],
+                             input_keys=['task_progress_in'],
+                             output_keys=['task_progress_out'])
     
     def execute(self, userdata):
+        global current_task
         rospy.loginfo('Moving base in Base state')
 
+        # TODO: move base service
+        # use current_task.base_orientation 
         time.sleep(3)
-        # move base code goes here
+
+        # set base as moved in task progress
+        d = userdata.task_progress_in
+        d['base_moved'] = True
+        userdata.task_progress_out = d
 
         return 'check_elevator'
 
 class Elevator_Goal_Check(smach.State):
     def __init__(self):
         smach.State.__init__(self,
-                             outcomes=['move_elevator', 'check_arm'])
+                             outcomes=['move_elevator', 'check_arm'],
+                             input_keys=['task_progress_in'], 
+                             output_keys=['task_progress_out', 'home_position_out'])
 
     def execute(self, userdata):
         rospy.loginfo('Checking if elevator needs to be moved')
 
-        # get elevator position
+        userdata.task_progress_in = userdata.task_progress_out
+        userdata.home_position_out = False
         
-        if True: #if elevator needs to be moved 
-            return 'move_elevator'
-        else: # otherwise skip to arm check
+        if userdata.task_progress_in['elevator_moved']:
             return 'check_arm'
+        else:
+            return 'move_elevator'
 
 class Elevator(smach.State):
     def __init__(self):
         smach.State.__init__(self,
-                             outcomes=['check_arm'])
+                             outcomes=['check_arm', 'task_progress'],
+                             input_keys=['task_progress_in', 'home_position_in'], 
+                             output_keys=['task_progress_out'])
     
     def execute(self, userdata):
         rospy.loginfo('Moving jacks in Elevator state')
 
+        # if elevator needs to be homed, home it and go back to task progress
+        if userdata.home_position_in:
+            #TODO: elevator home service
+            time.sleep(3)
+            return 'task_progress'
+
+        # TODO: move elevator service
+        # use current_task.elevator_height 
         time.sleep(3)
-        # move elevator code goes here
+
+        # set elevator as moved in task progress
+        d = userdata.task_progress_in
+        d['elevator_moved'] = True
+        userdata.task_progress_out = d
 
         return 'check_arm'
 
 class Arm_Goal_Check(smach.State):
     def __init__(self):
         smach.State.__init__(self,
-                             outcomes=['move_arm', 'task_progress'])
+                             outcomes=['move_arm', 'task_progress'],
+                             input_keys=['task_progress_in'], 
+                             output_keys=['task_progress_out', 'home_position_out'])
 
     def execute(self, userdata):
         rospy.loginfo('Checking if arm needs to be moved')
 
-        # get arm position
+        userdata.task_progress_in = userdata.task_progress_out
+        userdata.home_position_out = False
         
-        if True: # if arm needs to be moved 
-            return 'move_arm'
-        else: # otherwise check if task is complete
+        if userdata.task_progress_in['arm_moved']:
             return 'task_progress'
+        else:
+            return 'move_arm'
 
 class Arm(smach.State):
     def __init__(self):
         smach.State.__init__(self,
-                             outcomes=['task_progress'])
+                             outcomes=['task_progress'],
+                             input_keys=['task_progress_in', 'home_position_in'], 
+                             output_keys=['task_progress_out'])
     
     def execute(self, userdata):
         rospy.loginfo('Moving arm in Arm state')
 
+        # if arm needs to be homed, home it and go back to task progress
+        if userdata.home_position_in:
+            #TODO: arm home service
+            time.sleep(3)
+            return 'task_progress'
+
+        # TODO: move arm service
+        # use current_task.arm_orientation 
         time.sleep(3)
-        # move arm code goes here
+
+        # set arm as moved in task progress
+        d = userdata.task_progress_in
+        d['arm_moved'] = True
+        userdata.task_progress_out = d
 
         return 'task_progress'
 
@@ -151,6 +210,7 @@ def main():
         'elevator_moved': False,
         'arm_moved': False,
     }
+    sm.userdata.home_position = False
 
     # Open the container
     with sm:
@@ -158,28 +218,47 @@ def main():
         smach.StateMachine.add('IDLE', Idle(), 
                                transitions={'swap':'SHUTDOWN', 
                                             'task_progress':'TASK_PROGRESS',
-                                            'shutdown':'SHUTDOWN'})
+                                            'shutdown':'SHUTDOWN'},
+                               remapping={'task_progress_out':'task_progress'})
         smach.StateMachine.add('TASK_PROGRESS', Task_Progress(), 
-                               transitions={'task_complete':'IDLE', 
-                                            'move_base':'BASE'})
+                               transitions={'idle':'IDLE', 
+                                            'move_base':'BASE'},
+                               remapping={'task_progress_in':'task_progress',
+                                          'task_progress_out':'task_progress',
+                                          'home_position_out':'home_position'})
 
 
         smach.StateMachine.add('BASE', Base(), 
-                               transitions={'check_elevator':'ELEVATOR_CHECK'})
+                               transitions={'check_elevator':'ELEVATOR_CHECK'},
+                               remapping={'task_progress_in':'task_progress',
+                                          'task_progress_out':'task_progress'})
 
 
         smach.StateMachine.add('ELEVATOR_CHECK', Elevator_Goal_Check(), 
                                transitions={'move_elevator':'ELEVATOR',
-                                            'check_arm':'ARM_CHECK'})
+                                            'check_arm':'ARM_CHECK'},
+                               remapping={'task_progress_in':'task_progress',
+                                          'task_progress_out':'task_progress',
+                                          'home_position_out':'home_position'})
         smach.StateMachine.add('ELEVATOR', Elevator(), 
-                               transitions={'check_arm':'ARM_CHECK'})
+                               transitions={'check_arm':'ARM_CHECK',
+                                            'task_progress':'TASK_PROGRESS'},
+                               remapping={'task_progress_in':'task_progress',
+                                          'task_progress_out':'task_progress',
+                                          'home_position_in':'home_position'})
 
 
         smach.StateMachine.add('ARM_CHECK', Arm_Goal_Check(), 
                                transitions={'move_arm':'ARM',
-                                            'task_progress':'TASK_PROGRESS'})
+                                            'task_progress':'TASK_PROGRESS'},
+                               remapping={'task_progress_in':'task_progress',
+                                          'task_progress_out':'task_progress',
+                                          'home_position_out':'home_position'})
         smach.StateMachine.add('ARM', Arm(), 
-                               transitions={'task_progress':'TASK_PROGRESS'})
+                               transitions={'task_progress':'TASK_PROGRESS'},
+                               remapping={'task_progress_in':'task_progress',
+                                          'task_progress_out':'task_progress',
+                                          'home_position_in':'home_position'})
 
     # Create and start the introspection server
     # sis = smach_ros.IntrospectionServer('robot_state_machine', sm, '/SM_ROOT')
