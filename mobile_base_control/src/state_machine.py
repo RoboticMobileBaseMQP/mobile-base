@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
-from flask import current_app
 import rospy
 import smach
 import time
 import threading
+import queue
+from mobile_base_control.msg import task
 
 current_task = None
 
@@ -17,13 +18,14 @@ class Idle(smach.State):
 
         self.mutex = threading.Lock()
         self.received_task = None
+        self.task_queue = queue.LifoQueue()
 
-        #task_queue_subscriber = rospy.Subscriber('/task-topic', None, self.callback) # TODO
+        task_queue_subscriber = rospy.Subscriber('/task_topic', task, self.add_to_queue)
         
 
-    def callback(self, msg):
+    def add_to_queue(self, msg):
         self.mutex.acquire()
-        self.received_task = msg.content # TODO: add to a queue
+        self.task_queue.put(msg.content)
         self.mutex.release()
         pass
 
@@ -33,11 +35,11 @@ class Idle(smach.State):
         waiting_for_task = True
 
         # spin while waiting for next task
-        while not waiting_for_task:
+        while waiting_for_task:
             self.mutex.acquire()
-            if self.received_task: # if queue is not empty
+            if not self.task_queue.empty(): # if queue is not empty
                 waiting_for_task = False
-                current_task = self.received_task # pop from queue
+                current_task = self.task_queue.get() # pop from queue
             self.mutex.release()
         
         # after receiving task, all progress is reset
