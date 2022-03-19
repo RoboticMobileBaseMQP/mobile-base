@@ -8,6 +8,7 @@ import queue
 from task_manager.msg import task
 
 current_task = None
+task_type_dict = {0: "Pick", 1: "Home", 2: "Swap", 3: "Shutdown"}
 
 # define Idle State
 class Idle(smach.State):
@@ -18,15 +19,16 @@ class Idle(smach.State):
 
         self.mutex = threading.Lock()
         self.received_task = None
-        self.task_queue = queue.LifoQueue()
+        self.task_queue = queue.Queue()
 
         task_queue_subscriber = rospy.Subscriber('/task_topic', task, self.add_to_queue)
         
 
     def add_to_queue(self, msg):
         self.mutex.acquire()
-        rospy.loginfo('Added new task to queue')
         self.task_queue.put(msg)
+        rospy.loginfo('Added new ' + task_type_dict[msg.task_type] + ' task to queue')
+
         self.mutex.release()
         pass
 
@@ -40,7 +42,9 @@ class Idle(smach.State):
             self.mutex.acquire()
             if not self.task_queue.empty(): # if queue is not empty
                 waiting_for_task = False
+                
                 current_task = self.task_queue.get() # pop from queue
+                rospy.loginfo("--- Current task is " + task_type_dict[current_task.task_type] + " task ---")
             self.mutex.release()
         
         # after receiving task, all progress is reset
@@ -68,7 +72,7 @@ class Task_Progress(smach.State):
     def execute(self, userdata):
         # rospy.loginfo('Passing through Task_Progress state')
 
-        print("    " + str(userdata.task_progress_in))
+        # print("    " + str(userdata.task_progress_in))
 
         if all(userdata.task_progress_in.values()): # if all task components are complete
             return 'idle'
