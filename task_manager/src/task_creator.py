@@ -28,7 +28,6 @@ class TaskCreator:
         t.gripper_closed = gripper
 
         self.task_publisher.publish(t)
-        print("published")
 
 def getKey(key_timeout):
     tty.setraw(sys.stdin.fileno())
@@ -58,9 +57,12 @@ if __name__ == "__main__":
     while not rospy.is_shutdown():
         x = getKey(None)
 
-        if x not in ["1", "2", "3"]:
+        if x == '\x03':
+            break
+
+        if x not in ["1", "2", "3", "4"]:
             print("bad input, try again")
-            # continue
+            continue
 
         if x == "1":
             #TODO: fill in test values
@@ -98,6 +100,16 @@ if __name__ == "__main__":
                 arm_joint_angles,
                 gripper_closed
             )
+
+        if x == "4":
+            print("shutting down")
+
+            m.send_task(
+                t.TASK_SHUTDOWN,
+                base_orientation,
+                elevator_height,
+                arm_joint_angles,
+                gripper_closed
+            )
         
-        if (x == '\x03'):
-            break
+

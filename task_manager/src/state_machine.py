@@ -25,9 +25,8 @@ class Idle(smach.State):
 
     def add_to_queue(self, msg):
         self.mutex.acquire()
-        print(type(msg))
+        rospy.loginfo('Added new task to queue')
         self.task_queue.put(msg)
-        print("~~~~~~~~~~~~~~~~~~~~~added task to queue")
         self.mutex.release()
         pass
 
@@ -51,13 +50,12 @@ class Idle(smach.State):
             'arm_moved': False,
         }
 
-        # TODO: 
-        if True: # if task_type is not shutdown
-            if False: # if task_type==swap_arm
+        if current_task.task_type != current_task.TASK_SHUTDOWN:
+            if current_task.task_type == current_task.TASK_SWAP:
                 return 'swap'
             else:
                 return 'task_progress'
-        else: # if task_type is shutdown
+        else:
             return 'shutdown'
 
 class Task_Progress(smach.State):
@@ -68,7 +66,7 @@ class Task_Progress(smach.State):
                              output_keys=['task_progress_out', 'home_position_out'])
 
     def execute(self, userdata):
-        rospy.loginfo('Passing through Task_Progress state')
+        # rospy.loginfo('Passing through Task_Progress state')
 
         print("    " + str(userdata.task_progress_in))
 
@@ -103,7 +101,7 @@ class Base(smach.State):
     
     def execute(self, userdata):
         global current_task
-        rospy.loginfo('Moving base in Base state')
+        # rospy.loginfo('Moving base in Base state')
 
         # TODO: move base service
         # use current_task.base_orientation 
@@ -124,7 +122,7 @@ class Elevator_Goal_Check(smach.State):
                              output_keys=['task_progress_out', 'home_position_out'])
 
     def execute(self, userdata):
-        rospy.loginfo('Checking if elevator needs to be moved')
+        # rospy.loginfo('Checking if elevator needs to be moved')
 
         userdata.task_progress_out = userdata.task_progress_in
         userdata.home_position_out = False
@@ -143,7 +141,7 @@ class Elevator(smach.State):
     
     def execute(self, userdata):
         global current_task
-        rospy.loginfo('Moving jacks in Elevator state')
+        # rospy.loginfo('Moving jacks in Elevator state')
 
         # if elevator needs to be homed, home it and go back to task progress
         if userdata.home_position_in:
@@ -170,7 +168,7 @@ class Arm_Goal_Check(smach.State):
                              output_keys=['task_progress_out', 'home_position_out'])
 
     def execute(self, userdata):
-        rospy.loginfo('Checking if arm needs to be moved')
+        # rospy.loginfo('Checking if arm needs to be moved')
 
         userdata.task_progress_out = userdata.task_progress_in
         userdata.home_position_out = False
@@ -189,7 +187,7 @@ class Arm(smach.State):
     
     def execute(self, userdata):
         global current_task
-        rospy.loginfo('Moving arm in Arm state')
+        # rospy.loginfo('Moving arm in Arm state')
 
         # if arm needs to be homed, home it and go back to task progress
         if userdata.home_position_in:
