@@ -1,3 +1,0 @@
-<launch>
-    <node name="task_creator" pkg="mobile_base_control" type="task_creator.py" output="screen"/>
-</launch>

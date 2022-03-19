@@ -5,7 +5,7 @@ import smach
 import time
 import threading
 import queue
-from mobile_base_control.msg import task
+from task_manager.msg import task
 
 current_task = None
 
