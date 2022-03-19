@@ -25,7 +25,9 @@ class Idle(smach.State):
 
     def add_to_queue(self, msg):
         self.mutex.acquire()
-        self.task_queue.put(msg.content)
+        print(type(msg))
+        self.task_queue.put(msg)
+        print("~~~~~~~~~~~~~~~~~~~~~added task to queue")
         self.mutex.release()
         pass
 
@@ -198,6 +200,8 @@ class Arm(smach.State):
         # TODO: move arm service
         # use current_task.arm_orientation 
         time.sleep(3)
+
+        #TODO: move gripper service
 
         # set arm as moved in task progress
         d = userdata.task_progress_in

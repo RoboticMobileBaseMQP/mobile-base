@@ -6,4 +6,4 @@ geometry_msgs/PoseStamped base_orientation
 float64 elevator_height
 geometry_msgs/PoseStamped arm_orientation
 float64[] arm_joint_angles
-bool arm_closed
+bool gripper_closed

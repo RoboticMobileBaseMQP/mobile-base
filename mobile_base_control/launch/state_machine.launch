@@ -1,0 +1,3 @@
+<launch>
+    <node name="state_machine" pkg="mobile_base_control" type="state_machine.py" output="screen"/>
+</launch>
