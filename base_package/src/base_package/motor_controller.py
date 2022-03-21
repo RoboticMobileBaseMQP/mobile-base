@@ -33,6 +33,7 @@ class MotorController:
     
     # jack callback
     def spin_elevator_motors(self, msg):
+        print("received elevator effort: " + str(msg.Efforts))
         for i in range(3):
             self.set_motor_speed(i+4, msg.Efforts[i])
 

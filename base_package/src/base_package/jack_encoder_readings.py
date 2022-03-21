@@ -15,6 +15,7 @@ class JackEncoderReader:
         
         if init_node:
             rospy.init_node("jack_encoder_readings", anonymous=True)
+        self.rate = rospy.Rate(2) #2Hz
         
         self.jackEncoders = rospy.Publisher("/base/elevator_encoders", encoder_values, queue_size=10)
         # Jack Right A  = JRa
@@ -60,7 +61,8 @@ class JackEncoderReader:
             
             # rostopic publishing
             values.Values = [int(rightJack), int(leftJack), int(backJack)]
-            self.jackEncoders.publish(values)            
+            self.jackEncoders.publish(values)
+            self.rate.sleep()
 
 
 if __name__ == "__main__":
