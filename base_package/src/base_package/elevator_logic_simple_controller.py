@@ -46,7 +46,7 @@ class ElevatorNode:
             self.efforts.Efforts = [left_jack, back_jack, right_jack] # moves each jack individually
         
         # send signal to reset encoders to 0
-        self.efforts.Reset = msg.buttons[7]
+        self.efforts.Reset = msg.buttons[7] 
 
         # add feedback loop to ensure all motors reach the same height
         self.elevator_efforts.publish(self.efforts)
@@ -55,7 +55,12 @@ class ElevatorNode:
     def updatePosition(self, msg):
         # TODO
         # Publish rough coordinates of elevator to update in sim!
-        pass
+
+        encoders = [-x for x in msg.Values]
+
+        debug_str = "curr encoders: " + str(msg.Values)
+        
+        print(debug_str)
 
 
 if __name__=="__main__":
