@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 
-from torch import sigmoid
 import rospy
 from sensor_msgs.msg import Joy
-from std_msgs.msg import Float64, Float64MultiArray
 from base_package.msg import effort_list, encoder_values
 import threading
 import time
@@ -36,6 +34,8 @@ class ElevatorNode:
         self.set_point_updater.start()
         self.thread_running = True
 
+        self.jacks_zeroed = False
+
         # Publish updates to Simulation
         # arm_name = rospy.get_param("arm")
         # arm_namespace = "panda" if arm_name=="panda" else "my_gen3"
@@ -65,8 +65,21 @@ class ElevatorNode:
             if not self.thread_running:
                 break
 
-    # P controller for each jack motor
+    # switches between zeroing method to p controller method after jacks are zeroed 
     def encoder_callback(self, msg):
+        if self.jacks_zeroed:
+            self.jack_p_controller(msg)
+        else:
+            self.zero_jacks(msg)
+
+    # brings all 3 jacks down until they hit limit switches
+    def zero_jacks(self, msg):
+        pass
+        # get all jacks down to zero
+        self.jacks_zeroed = True
+
+    # P controller for each jack motor
+    def jack_p_controller(self, msg):
         # TODO: Publish rough coordinates of elevator to update in sim!
 
         # TODO: play with these values 
@@ -102,5 +115,5 @@ if __name__=="__main__":
 
     kill_efforts = effort_list()
     kill_efforts.Efforts = [0.0, 0.0, 0.0]
-    e.elevator_efforts.publish(kill_efforts)
-    print("sending 0 0 0 efforts")
+    e.elevator_efforts.publish(kill_efforts) # doesn't work bc not in rospy.spin() loop?
+
