@@ -24,7 +24,7 @@ class ElevatorNode:
 
         self.set_point = 0 # point the jacks are trying to reach
         self.set_point_delta = 0 # change in set_point
-        self.delta_scalar = 1 # rate of set_point change # TODO: play with this value
+        self.delta_scalar = 3 # rate of set_point change # TODO: play with this value
 
         # Publish calculated efforts to low level controllers
         self.elevator_efforts = rospy.Publisher("/base/elevator_efforts", effort_list, queue_size=10)
@@ -84,8 +84,8 @@ class ElevatorNode:
             effort = C1*self.sigmoid(set_pt_offset) + C2*self.sigmoid(avg_jack_offset) 
             temp.append(max(min(effort, 100), -100))
         
-        self.efforts.Efforts = temp
-        debug_str += ", efforts: " + str(temp)
+        self.efforts.Efforts = [-x for x in temp]
+        debug_str += ", efforts: " + str(self.efforts.Efforts)
 
         print(debug_str)
         self.elevator_efforts.publish(self.efforts)
@@ -103,3 +103,4 @@ if __name__=="__main__":
     kill_efforts = effort_list()
     kill_efforts.Efforts = [0.0, 0.0, 0.0]
     e.elevator_efforts.publish(kill_efforts)
+    print("sending 0 0 0 efforts")
