@@ -24,7 +24,7 @@ class ElevatorNode:
 
         self.set_point = 0 # point the jacks are trying to reach
         self.set_point_delta = 0 # change in set_point
-        self.delta_scalar = 3 # rate of set_point change # TODO: play with this value
+        self.delta_scalar = 600 # rate of set_point change # TODO: play with this value
 
         # Publish calculated efforts to low level controllers
         self.elevator_efforts = rospy.Publisher("/base/elevator_efforts", effort_list, queue_size=10)
@@ -61,7 +61,7 @@ class ElevatorNode:
             self.mutex.acquire()
             self.set_point += self.set_point_delta
             self.mutex.release()
-            time.sleep(.5)
+            time.sleep(.1)
             if not self.thread_running:
                 break
 
@@ -73,7 +73,7 @@ class ElevatorNode:
         C1, C2 = .7, .3
         temp = []
 
-        encoders = [-x for x in msg.Values]
+        encoders = msg.Values
 
         debug_str = "curr pt: " + str(encoders) + ", set pt: " + str(self.set_point)
 
@@ -84,14 +84,14 @@ class ElevatorNode:
             effort = C1*self.sigmoid(set_pt_offset) + C2*self.sigmoid(avg_jack_offset) 
             temp.append(max(min(effort, 100), -100))
         
-        self.efforts.Efforts = [-x for x in temp]
-        debug_str += ", efforts: " + str(self.efforts.Efforts)
+        debug_str += ", efforts: " + str(temp)
+        self.efforts.Efforts = [-x for x in temp] # motors spin in reverse of given efforts (+ effort => move down)
 
         print(debug_str)
         self.elevator_efforts.publish(self.efforts)
 
     def sigmoid(self, x):
-        return 200 / (1 + math.exp(-x/20)) - 100
+        return 200 / (1 + math.exp(-x/2000)) - 100
 
 
 if __name__=="__main__":
