@@ -1,6 +1,6 @@
 <launch>
   <arg name="arm" default="panda" /> <!-- determines which arm to launch from command line -->
-  <param name="arm" value="$(arg arm)" /> 
+  <param name="arm/name" value="$(arg arm)" /> 
 
   <!-- spawn specified insert w/ moveit -->
   <group if="$(eval arm == 'panda')">
@@ -10,6 +10,7 @@
       <arg name="y0" value="0"/>
       <arg name="z0" value="1"/>
     </include>
+    <param name="arm/dof" value="7"/>
   </group>
 
   <group if="$(eval arm == 'kortex')">
@@ -19,6 +20,7 @@
       <arg name="y0" value="0"/>
       <arg name="z0" value="1"/>
     </include>
+    <param name="arm/dof" value="7"/>
   </group>
 
   <!-- spawn moveit server -->

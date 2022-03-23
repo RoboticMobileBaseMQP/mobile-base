@@ -24,7 +24,7 @@ class ElevatorNode:
         self.elevator_efforts = rospy.Publisher("/base/elevator_efforts", effort_list, queue_size=10)
 
         # Publish updates to Simulation
-        # arm_name = rospy.get_param("arm")
+        # arm_name = rospy.get_param("arm/name")
         # arm_namespace = "panda" if arm_name=="panda" else "my_gen3"
         # arm_controller_str = "/" + arm_namespace + "/" + arm_name + "_{0}_joint_controller/command"
 

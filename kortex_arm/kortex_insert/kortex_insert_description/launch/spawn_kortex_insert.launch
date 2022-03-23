@@ -18,7 +18,7 @@
     <arg name="vision" default="true"/> <!-- True if the arm has a Vision module -->
     
     <!-- Default gripper for Gen3 is none, default gripper for Gen3 lite is gen3_lite_2f -->
-    <arg name="gripper" default="" if="$(eval arg('arm') == 'gen3')"/>
+    <arg name="gripper" default="robotiq_2f_140" if="$(eval arg('arm') == 'gen3')"/>
     <arg name="gripper" default="gen3_lite_2f" if="$(eval arg('arm') == 'gen3_lite')"/>
     
     <arg name="robot_name" default="my_$(arg arm)"/>
@@ -51,8 +51,10 @@
         <param name="robot_description" command="$(find xacro)/xacro --inorder $(find kortex_insert_description)/urdf/kortex_insert.xacro dof:=$(arg dof) vision:=$(arg vision) sim:=true prefix:=$(arg prefix)"
             if="$(eval not arg('gripper'))"/>
         <!-- With gripper -->
-        <param name="robot_description" command="$(find xacro)/xacro --inorder $(find kortex_description)/robots/$(arg arm)_$(arg gripper).xacro dof:=$(arg dof) vision:=$(arg vision) sim:=true prefix:=$(arg prefix)"
+        <param name="robot_description" command="$(find xacro)/xacro --inorder $(find kortex_insert_description)/urdf/kortex_insert.xacro dof:=$(arg dof) vision:=$(arg vision) sim:=true prefix:=$(arg prefix)"
             unless="$(eval not arg('gripper'))"/>
+
+
 
         <!-- Spawn the robot in Gazebo -->
         <!-- <rosparam command="load" file="$(find kortex_description)/arms/$(arg arm)/$(arg dof)dof/config/gazebo_initial_joint_positions.yaml"/> -->
@@ -132,7 +134,7 @@
         <node name="$(arg robot_name)_driver" pkg="kortex_driver" type="kortex_arm_driver" output="screen"> <!--launch-prefix="gdb -ex run args"-->
             <param name="sim" value="true"/>
             <param name="cyclic_data_publish_rate" value="$(arg cyclic_data_publish_rate)"/>
-            <param name="arm" value="$(arg arm)"/>
+            <param name="arm/name" value="$(arg arm)"/>
             <param name="gripper" value="$(arg gripper)"/>
             <param name="dof" value="$(arg dof)"/>
             <param name="robot_name" value="$(arg robot_name)"/>

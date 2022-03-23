@@ -2,7 +2,7 @@
 
 <robot name="kortex_insert" xmlns:xacro="http://ros.org/wiki/xacro">
 
-  <xacro:include filename="$(find kortex_description)/robots/gen3.xacro"/>
+  <xacro:include filename="$(find kortex_description)/robots/gen3_robotiq_2f_140.xacro"/>
 
   <link name="world" />
 

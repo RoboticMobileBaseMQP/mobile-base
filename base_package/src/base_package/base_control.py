@@ -5,7 +5,7 @@ import time
 
 class BaseControl(object):
     def __init__(self):
-        arm_name = rospy.get_param("arm")
+        arm_name = rospy.get_param("arm/name")
         arm_namespace = "panda" if arm_name=="panda" else "my_gen3"
 
         insert_controller_str = "/" + arm_namespace + "/" + arm_name + "_{0}_joint_controller/command"

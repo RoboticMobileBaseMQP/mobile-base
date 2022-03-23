@@ -15,7 +15,7 @@ class Follower(object):
         self.arm_controllers = []
         self.prev_value = [0,0,0]
 
-        arm_name = rospy.get_param("arm")
+        arm_name = rospy.get_param("arm/name")
         print("arm: " + arm_name)
         arm_namespace = "panda" if arm_name=="panda" else "my_gen3"
         self.root_joint_name = "base_footprint" # "panda_link0" if arm_name=="panda" else "base_footprint" # idk why the panda needs the kortex base link but whatever
