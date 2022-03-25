@@ -24,6 +24,8 @@ class MoveitArmClient:
         rospy.sleep(1)
 
     def move_arm_EE(self, pose):
+        # client side used to move the arm to a desired EE pose
+
         rospy.wait_for_service('/move_it_EE')
         try:
             c = rospy.ServiceProxy('/move_it_EE', moveToPose)
@@ -53,8 +55,10 @@ class MoveitArmClient:
         except (rospy.ServiceException, tf2_ros.LookupException, 
                 tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException) as e:
             print("Service called failed: %s"%e)
+            return
 
     def move_arm_angles(self, joints):
+        # client side used to move the arm to a desired set of joint angles
         rospy.wait_for_service('/move_it_angles')
         try:
             c = rospy.ServiceProxy('/move_it_angles', moveToAngles)
@@ -70,6 +74,7 @@ class MoveitArmClient:
             print("Service called failed as: %s"%e)
 
     def moveGripper(self, finger):
+        # client side used to move the grippers to a desired position
         rospy.wait_for_service('/move_it_gripper')
         try:
             c = rospy.ServiceProxy('/move_it_gripper', grip)
