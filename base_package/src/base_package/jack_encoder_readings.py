@@ -6,7 +6,7 @@ import sys
 import Encoder
 import rospy
 from std_msgs.msg import Int64
-from base_package.msg import effort_list, encoder_values
+from base_package.msg import effort_list, encoder_values, jack_reset
 # import special message type of a list of 3 int64's
 
 
@@ -32,20 +32,15 @@ class JackEncoderReader:
 
         self.encR_zero, self.encL_zero, self.encB_zero = 0, 0, 0
 
-        self.encoder_writer = rospy.Subscriber("/base/elevator_efforts", effort_list, self.check_encoder_reset)
+        self.encoder_writer = rospy.Subscriber("/base/elevator_resets", jack_reset, self.encoder_reset)
 
-    def check_encoder_reset(self, msg):
-        if msg.Reset:
-            print("resetting zero")
-            self.encR_zero = self.encR.read()
+    def encoder_reset(self, msg):
+        if msg.reset_left:
             self.encL_zero = self.encL.read()
+        if msg.reset_back:
             self.encB_zero = self.encB.read()
-    
-    def home_config(self):
-        # TODO
-        # Read pins on limit switches to know if jack is home
-        # if limit swithc is not enabled and home config is desired, lower jacks until limit switch is true
-        return
+        if msg.reset_right:
+            self.encR_zero = self.encR.read()
         
     def main(self):
         # if home_config == True:

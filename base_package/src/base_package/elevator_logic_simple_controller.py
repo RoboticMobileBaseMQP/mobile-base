@@ -2,9 +2,7 @@
 
 import rospy
 from sensor_msgs.msg import Joy
-from std_msgs.msg import Float64, Float64MultiArray
-from base_package.msg import effort_list, encoder_values
-
+from base_package.msg import effort_list, encoder_values, jack_reset
 
 class ElevatorNode:
     def __init__(self, init_node=False):
@@ -22,6 +20,7 @@ class ElevatorNode:
 
         # Publish calculated efforts to low level controllers
         self.elevator_efforts = rospy.Publisher("/base/elevator_efforts", effort_list, queue_size=10)
+        self.elevator_resets = rospy.Publisher("/base/elevator_resets", jack_reset, queue_size=10)
 
         # Publish updates to Simulation
         # arm_name = rospy.get_param("arm")
@@ -40,13 +39,17 @@ class ElevatorNode:
         back_jack = speed*(msg.buttons[4] + -msg.buttons[5]) # RB up LB down
         right_jack = speed*(msg.buttons[2] + -msg.buttons[3]) # Y up X down
 
-        if msg.axes[7]:
+        if msg.axes[7]: # D-pad up/down
             self.efforts.Efforts = [-speed*el for el in [msg.axes[7]]*3] # moves all 3 jacks
         else: 
             self.efforts.Efforts = [left_jack, back_jack, right_jack] # moves each jack individually
         
         # send signal to reset encoders to 0
-        self.efforts.Reset = msg.buttons[7] 
+        if msg.buttons[7]:
+            print("resetting encoders")
+            j = jack_reset()
+            j.reset_left, j.reset_back, j.reset_right = 1, 1, 1
+            self.elevator_resets.publish(j)
 
         # add feedback loop to ensure all motors reach the same height
         self.elevator_efforts.publish(self.efforts)

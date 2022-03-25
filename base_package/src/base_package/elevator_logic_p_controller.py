@@ -2,7 +2,7 @@
 
 import rospy
 from sensor_msgs.msg import Joy
-from base_package.msg import effort_list, encoder_values
+from base_package.msg import effort_list, encoder_values, jack_reset
 import threading
 import time
 import math
@@ -44,13 +44,11 @@ class ElevatorNode:
         # self.zInsertController = rospy.Publisher(arm_controller_str.format('z'), Float64, queue_size=10)
 
     def joy_callback(self, msg):
-        
         if msg.buttons[7]:
-            reset_msg = effort_list()
-            reset_msg.Reset = 1
-            reset_msg.Efforts = [0.0, 0.0, 0.0]
             print("resetting encoders")
-            self.elevator_efforts.publish(reset_msg)
+            j = jack_reset()
+            j.reset_left, j.reset_back, j.reset_right = 1, 1, 1
+            self.elevator_resets.publish(j)
 
         self.mutex.acquire()
         self.set_point_delta = self.delta_scalar*msg.axes[7]
