@@ -59,8 +59,6 @@ class ElevatorNode:
         # TODO
         # Publish rough coordinates of elevator to update in sim!
 
-        encoders = [-x for x in msg.Values]
-
         debug_str = "curr encoders: " + str(msg.Values)
         
         print(debug_str)

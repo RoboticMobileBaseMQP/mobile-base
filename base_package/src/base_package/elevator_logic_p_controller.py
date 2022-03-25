@@ -43,6 +43,7 @@ class ElevatorNode:
 
         # self.zInsertController = rospy.Publisher(arm_controller_str.format('z'), Float64, queue_size=10)
 
+    # handles controller input for resetting all jacks and going up and down
     def joy_callback(self, msg):
         if msg.buttons[7]:
             print("resetting encoders")
@@ -54,6 +55,7 @@ class ElevatorNode:
         self.set_point_delta = self.delta_scalar*msg.axes[7]
         self.mutex.release()
 
+    # thread that increments set_point while d-pad button is pressed
     def update_set_point(self):
         while True:
             self.mutex.acquire()
