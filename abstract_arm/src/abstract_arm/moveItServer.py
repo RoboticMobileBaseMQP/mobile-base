@@ -173,7 +173,8 @@ class MoveItPlanner:
                     rospy.loginfo(f"Gripping conditions not within scope. Try a value between 0 and {left.max_bound()}!")
                     bool.data = False
                     return gripResponse(bool)
-            else:
+            
+            else: # kortex
                 finger_joint = self.robot.get_joint('finger_joint')
                 
                 curr_finger_joint = joint_states.position[joint_states.name.index("finger_joint")]
