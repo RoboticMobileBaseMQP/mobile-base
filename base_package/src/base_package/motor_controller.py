@@ -37,13 +37,11 @@ class MotorController:
     def spin_elevator_motors(self, msg):
         print("received elevator effort: " + str(msg.Efforts))
         for i in range(3):
-            if self.jack_resets[i]:
-                print("reset hit")
             if not (self.jack_resets[i] and msg.Efforts[i] > 0): # if reset, prevent motors from going down
                 self.set_motor_speed(i+4, msg.Efforts[i])
 
     def update_resets(self, msg):
-        self.jack_resets = [msg.left_jack, msg.back_jack, msg.right_jack]
+        self.jack_resets = [msg.reset_left, msg.reset_back, msg.reset_right]
 
 
     def translate(self, value, leftMin, leftMax, rightMin, rightMax):
