@@ -7,7 +7,6 @@ import Encoder
 import rospy
 from std_msgs.msg import Int64
 from base_package.msg import effort_list, encoder_values, jack_reset
-# import special message type of a list of 3 int64's
 
 
 class JackEncoderReader:
