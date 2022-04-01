@@ -4,7 +4,7 @@ import adafruit_pca9685 as ada
 import board
 import time
 import rospy
-from base_package.msg import effort_list, encoder_values
+from base_package.msg import effort_list, jack_reset
 
 # Controls motors via i2c on raspberry pi - must be launched remotely
 class MotorController:
@@ -19,10 +19,13 @@ class MotorController:
 
         period = .012
         self.pwm.frequency = 1/period # period = 10ms ish
+
+        self.jack_resets = [False, False, False]
         
         # setup topic listeners
         rospy.Subscriber("/base/mecanum_efforts", effort_list, self.spin_wheels)
         rospy.Subscriber("/base/elevator_efforts", effort_list, self.spin_elevator_motors)
+        rospy.Subscriber("/base/elevator_resets", jack_reset, self.update_resets)
 
 
     # drive callback
@@ -34,7 +37,14 @@ class MotorController:
     def spin_elevator_motors(self, msg):
         print("received elevator effort: " + str(msg.Efforts))
         for i in range(3):
-            self.set_motor_speed(i+4, msg.Efforts[i])
+            if self.jack_resets[i]:
+                print("reset hit")
+            if not (self.jack_resets[i] and msg.Efforts[i] > 0): # if reset, prevent motors from going down
+                self.set_motor_speed(i+4, msg.Efforts[i])
+
+    def update_resets(self, msg):
+        self.jack_resets = [msg.left_jack, msg.back_jack, msg.right_jack]
+
 
     def translate(self, value, leftMin, leftMax, rightMin, rightMax):
         # Figure out how 'wide' each range is
