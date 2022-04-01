@@ -13,7 +13,7 @@ class LimitSwitches:
 
         self.channels = [23, 22, 21] # left, back, right
 
-        self.prev_sw = [0,0,0]
+        self.prev_sw = [1,1,1]
         self.reset = jack_reset()
 
         GPIO.setmode(GPIO.BOARD)
@@ -28,6 +28,7 @@ class LimitSwitches:
         self.switches_publisher = rospy.Publisher("/base/elevator_resets", jack_reset, queue_size=10)
 
         print("limit switches ready")
+
         while not rospy.is_shutdown(): # polling loop
             sw = [GPIO.input(channel) for channel in self.channels]
             if sw != self.prev_sw:
@@ -44,9 +45,9 @@ class LimitSwitches:
     #     self.switches_publisher.publish(self.reset)
 
     def set_reset_msg(self, sw):
-        self.reset.reset_left = sw[0]
-        self.reset.reset_back = sw[1]
-        self.reset.reset_right = sw[2]
+        self.reset.reset_left = not sw[0]
+        self.reset.reset_back = not sw[1]
+        self.reset.reset_right = not sw[2]
 
 if __name__ == "__main__":
     l = LimitSwitches(init_node=True)
