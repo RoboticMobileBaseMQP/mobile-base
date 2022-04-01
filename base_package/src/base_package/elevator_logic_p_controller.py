@@ -74,8 +74,8 @@ class ElevatorNode:
 
     # brings all 3 jacks down until they hit limit switches
     def zero_jacks(self, msg):
-        pass
-        # get all jacks down to zero
+        pass 
+        # TODO: get all jacks down to zero
         self.jacks_zeroed = True
 
     # P controller for each jack motor
