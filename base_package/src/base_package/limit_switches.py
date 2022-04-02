@@ -27,6 +27,9 @@ class LimitSwitches:
 
         self.switches_publisher = rospy.Publisher("/base/elevator_resets", jack_reset, queue_size=10)
 
+        self.set_reset_msg(self.prev_sw) 
+        self.switches_publisher.publish(self.reset) # first publish is that the switches are pressed
+        
         print("limit switches ready")
 
         while not rospy.is_shutdown(): # polling loop
