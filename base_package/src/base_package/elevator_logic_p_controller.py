@@ -22,11 +22,15 @@ class ElevatorNode:
 
         self.set_point = 0 # point the jacks are trying to reach
         self.set_point_delta = 0 # change in set_point
-        self.delta_scalar = 600 # rate of set_point change # TODO: play with this value
+        self.delta_scalar = 500 # rate of set_point change # TODO: play with this value
 
         # Publish calculated efforts to low level controllers
         self.elevator_efforts = rospy.Publisher("/base/elevator_efforts", effort_list, queue_size=10)
         self.efforts = effort_list()
+
+        self.elevator_reset_publisher = rospy.Publisher("/base/elevator_resets", jack_reset, queue_size=10)
+        rospy.Subscriber("/base/elevator_resets", jack_reset, self.update_resets)
+        self.jack_resets = [False, False, False]
 
         # setup thread for updating set_point
         self.mutex = threading.Lock()
@@ -49,7 +53,8 @@ class ElevatorNode:
             print("resetting encoders")
             j = jack_reset()
             j.reset_left, j.reset_back, j.reset_right = 1, 1, 1
-            self.elevator_resets.publish(j)
+            self.elevator_reset_publisher.publish(j)
+            self.set_point = 0
 
         self.mutex.acquire()
         self.set_point_delta = self.delta_scalar*msg.axes[7]
@@ -65,6 +70,11 @@ class ElevatorNode:
             if not self.thread_running:
                 break
 
+    def update_resets(self, msg):
+        self.jack_resets = [msg.reset_left, msg.reset_back, msg.reset_right]
+        if all(self.jack_resets):
+            self.set_point = 0
+
     # switches between zeroing method to p controller method after jacks are zeroed 
     def encoder_callback(self, msg):
         if self.jacks_zeroed:
@@ -74,16 +84,19 @@ class ElevatorNode:
 
     # brings all 3 jacks down until they hit limit switches
     def zero_jacks(self, msg):
-        pass 
+        self.efforts.Efforts = [15, 15, 15] # positive to go down
+        self.elevator_efforts.publish(self.efforts)
         # TODO: get all jacks down to zero
-        self.jacks_zeroed = True
+
+        if all(self.jack_resets):
+           self.jacks_zeroed = True
 
     # P controller for each jack motor
     def jack_p_controller(self, msg):
         # TODO: Publish rough coordinates of elevator to update in sim!
 
         # TODO: play with these values 
-        C1, C2 = .7, .3
+        C1, C2 = .35, .15
         temp = []
 
         encoders = msg.Values
