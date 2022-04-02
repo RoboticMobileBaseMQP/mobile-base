@@ -35,14 +35,15 @@ class MotorController:
     
     # jack callback
     def spin_elevator_motors(self, msg):
-        print("received elevator effort: " + str(msg.Efforts))
+        print("received elevator effort: " + str(msg.Efforts) + ", jacks: " + str(self.jack_resets))
         for i in range(3):
             if not (self.jack_resets[i] and msg.Efforts[i] > 0): # if reset, prevent motors from going down
                 self.set_motor_speed(i+4, msg.Efforts[i])
+            else:
+                self.set_motor_speed(i+4, 0)
 
     def update_resets(self, msg):
         self.jack_resets = [msg.reset_left, msg.reset_back, msg.reset_right]
-
 
     def translate(self, value, leftMin, leftMax, rightMin, rightMax):
         # Figure out how 'wide' each range is
