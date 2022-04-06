@@ -6,9 +6,8 @@ import time
 import threading
 import queue
 from task_manager.msg import task
+from service_interface import ServiceInterface
 
-current_task = None
-task_type_dict = {0: "Pick", 1: "Home", 2: "Swap", 3: "Shutdown"}
 
 # define Idle State
 class Idle(smach.State):
@@ -190,7 +189,7 @@ class Arm(smach.State):
                              output_keys=['task_progress_out'])
     
     def execute(self, userdata):
-        global current_task
+        global current_task, service_interface
         # rospy.loginfo('Moving arm in Arm state')
 
         # if arm needs to be homed, home it and go back to task progress
@@ -200,10 +199,8 @@ class Arm(smach.State):
             return 'task_progress'
 
         # TODO: move arm service
-        # use current_task.arm_orientation 
-        time.sleep(3)
-
         #TODO: move gripper service
+        service_interface.move_arm(current_task.task_type, current_task.arm_orientation, current_task.gripper_closed)
 
         # set arm as moved in task progress
         d = userdata.task_progress_in
@@ -212,8 +209,14 @@ class Arm(smach.State):
 
         return 'task_progress'
 
-def main():
+
+if __name__ == '__main__':
     rospy.init_node('robot_state_machine')
+
+    # global variables (to be used in various state classes)
+    service_interface = ServiceInterface()
+    current_task: task = None
+    task_type_dict = {0: "Pick", 1: "Home", 2: "Swap", 3: "Shutdown"}
 
     # Create a SMACH state machine
     sm = smach.StateMachine(outcomes=['SHUTDOWN']) # add ERROR state?
@@ -281,7 +284,3 @@ def main():
 
     rospy.spin()
     # sis.stop()
-
-
-if __name__ == '__main__':
-    main()
