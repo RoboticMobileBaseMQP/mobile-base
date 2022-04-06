@@ -18,6 +18,12 @@ class ServiceInterface:
         else:
             self.arm_services.move_arm_angles(orientation)
 
-        self.arm_services.moveGripper(0.0 if gripper else 100.0) #TODO: double check gripper values
+        self.arm_services.move_gripper(0.0 if gripper else 100.0) #TODO: double check gripper values
 
         #TODO: return true if successful?
+
+    def home_arm(self):
+        self.arm_services.send_arm_home()
+    
+    def is_arm_in_home_pos(self):
+        return self.arm_services.is_arm_in_home_pos()

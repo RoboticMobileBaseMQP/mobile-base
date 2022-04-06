@@ -64,7 +64,7 @@ class Idle(smach.State):
 class Task_Progress(smach.State):
     def __init__(self):
         smach.State.__init__(self, 
-                             outcomes=['idle', 'move_base'],
+                             outcomes=['idle', 'move_base', 'move_arm', 'move_elevator'],
                              input_keys=['task_progress_in'],
                              output_keys=['task_progress_out', 'home_position_out'])
 
@@ -80,7 +80,7 @@ class Task_Progress(smach.State):
         userdata.home_position_out = False
 
         # check arm in home pos (TODO: service)
-        if False:
+        if not service_interface.is_arm_in_home_pos():
             userdata.home_position_out = True
             return 'move_arm'
 
@@ -194,12 +194,11 @@ class Arm(smach.State):
 
         # if arm needs to be homed, home it and go back to task progress
         if userdata.home_position_in:
-            #TODO: arm home service
-            time.sleep(3)
+            service_interface.home_arm()
             return 'task_progress'
 
         # TODO: move arm service
-        #TODO: move gripper service
+        # TODO: move gripper service
         service_interface.move_arm(current_task.task_type, current_task.arm_orientation, current_task.gripper_closed)
 
         # set arm as moved in task progress
@@ -237,7 +236,9 @@ if __name__ == '__main__':
                                remapping={'task_progress_out':'task_progress'})
         smach.StateMachine.add('TASK_PROGRESS', Task_Progress(), 
                                transitions={'idle':'IDLE', 
-                                            'move_base':'BASE'},
+                                            'move_base':'BASE',
+                                            'move_arm':'ARM',
+                                            'move_elevator': 'ELEVATOR'},
                                remapping={'task_progress_in':'task_progress',
                                           'task_progress_out':'task_progress',
                                           'home_position_out':'home_position'})

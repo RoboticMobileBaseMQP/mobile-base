@@ -16,8 +16,13 @@ class MoveitArmClient:
         if init_node:
             rospy.init_node("moveit_client", anonymous=True)
 
+        tau = 2.0 * pi
+        kortex_home_angles = [0, -tau / 15, 0, tau / 4, 0, tau / 6, 0]   
+        panda_home_angles = [0, -tau / 6, 0, -tau / 3, 0, tau / 6, 0] 
+
         self.arm_name = rospy.get_param("arm/name")
         self.arm_base_link_name = 'panda_link0' if self.arm_name=="panda" else "base_footprint" 
+        self.home_joint_angles = panda_home_angles if self.arm_name=="panda" else kortex_home_angles
 
         self.tfBuffer = tf2_ros.Buffer()
         listener = tf2_ros.TransformListener(self.tfBuffer)
@@ -73,7 +78,7 @@ class MoveitArmClient:
         except Exception as e:
             print("Service called failed as: %s"%e)
 
-    def moveGripper(self, finger):
+    def move_gripper(self, finger):
         # client side used to move the grippers to a desired position
         rospy.wait_for_service('/move_it_gripper')
         try:
@@ -87,6 +92,13 @@ class MoveitArmClient:
                 return print(str(success.data.data) + ", unable to find a solution.")
         except Exception as e:
             print("Service called failed as: %s"%e)
+
+    def send_arm_home(self):
+        self.move_arm_angles(self.home_joint_angles)
+
+    def is_arm_in_home_pos(self):
+        return False #TODO: get_pose(), compare to home joints with tolerance
+
 
 
 
@@ -115,33 +127,13 @@ if __name__ == "__main__":
     # print("Requesting.. ")
     # m.move_arm_EE(pose_goal)
 
-    tau = 2.0 * pi
+    m.is_arm_in_home_pos()
 
-    # Kortex
-    # joints = [None] * 7
-    # joints[0] = 0
-    # joints[1] = -tau / 15
-    # joints[2] = 0
-    # joints[3] = tau / 4
-    # joints[4] = 0
-    # joints[5] = tau / 6
-    # joints[6] = 0
-    # m.move_arm_angles(joints)
-
-    # Panda
-    # joints = [None] * 7
-    # joints[0] = 0
-    # joints[1] = -tau / 6
-    # joints[2] = 0
-    # joints[3] = -tau / 3
-    # joints[4] = 0
-    # joints[5] = tau / 6
-    # joints[6] = 0
-    # m.move_arm_angles(joints)
+    m.move_arm_angles(m.home_joint_angles)
 
     # Panda finger
-    finger = 0.0
-    m.moveGripper(finger)
+    # finger = 0.0
+    # m.move_gripper(finger)
 
 
 
