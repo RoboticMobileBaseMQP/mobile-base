@@ -1,3 +1,7 @@
 <launch>
+    <arg name="run_sim" default="true" />
+
     <node name="state_machine" pkg="task_manager" type="state_machine.py" output="screen"/>
+
+    <include file="$(find mobile_base_simulation)/launch/abstract_arm_and_base.launch" if="$(arg run_sim)"/>
 </launch>
