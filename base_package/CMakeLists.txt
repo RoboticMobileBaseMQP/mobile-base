@@ -49,6 +49,7 @@ add_message_files(
   FILES
   effort_list.msg
   encoder_values.msg
+  jack_reset.msg
 )
 
 ## Generate services in the 'srv' folder

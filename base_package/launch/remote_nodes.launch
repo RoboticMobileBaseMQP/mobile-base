@@ -1,4 +1,5 @@
 <launch>
     <node name="motor_controller" pkg="base_package" type="motor_controller.py" output="screen" />
     <node name="encoder_reader" pkg="base_package" type="jack_encoder_readings.py" output="screen" />
+    <node name="limit_switches" pkg="base_package" type="limit_switches.py" output="screen" />
 </launch>
