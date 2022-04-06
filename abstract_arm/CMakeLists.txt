@@ -61,6 +61,7 @@ catkin_python_setup()
    moveToPose.srv
    moveToAngles.srv
    grip.srv
+   getJointAngles.srv
  )
 
 ## Generate actions in the 'action' folder

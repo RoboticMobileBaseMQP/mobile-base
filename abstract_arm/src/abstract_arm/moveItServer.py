@@ -6,10 +6,9 @@ import rospy
 import moveit_commander
 import moveit_msgs.msg
 from std_msgs.msg import Float64
+from geometry_msgs.msg import Pose
 from sensor_msgs.msg import JointState
-from abstract_arm.srv import moveToPose, moveToPoseResponse
-from abstract_arm.srv import moveToAngles, moveToAnglesResponse
-from abstract_arm.srv import grip, gripResponse
+from abstract_arm.srv import moveToPose, moveToPoseResponse, moveToAngles, moveToAnglesResponse, grip, gripResponse, getJointAngles, getJointAnglesResponse
 from control_msgs.msg import GripperCommandActionGoal
 
 from std_msgs.msg import Bool
@@ -23,6 +22,7 @@ class MoveItPlanner:
         sEE = rospy.Service('/move_it_EE', moveToPose, self.move_arm)
         sAngs = rospy.Service('/move_it_angles', moveToAngles, self.move_arm_angle)
         sGrip = rospy.Service('/move_it_gripper', grip, self.moveGripper)
+        sPose = rospy.Service('/get_joint_angles', getJointAngles, self.get_arm_pose)
         
         # Robot arm groups and information
         self.arm_name = rospy.get_param("/arm/name")
@@ -214,6 +214,20 @@ class MoveItPlanner:
             rospy.loginfo(e)
             bool.data = False
             return gripResponse(bool)
+
+    def get_arm_pose(self, msg):
+        bool = Bool()
+        joints = [None]*7
+
+        try:
+            joints = self.arm_group.get_current_joint_values()
+            bool.data = True
+            return getJointAnglesResponse(joints, bool)
+
+        except Exception as e:
+            rospy.loginfo(e)
+            bool.data = False
+            return getJointAnglesResponse(joints, bool)
 
 
 if __name__ == "__main__":

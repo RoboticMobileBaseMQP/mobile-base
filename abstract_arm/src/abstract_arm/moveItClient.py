@@ -2,13 +2,11 @@
 
 import rospy
 import geometry_msgs.msg
-from abstract_arm.srv import moveToPose
-from abstract_arm.srv import moveToAngles
-from abstract_arm.srv import grip
+from abstract_arm.srv import moveToPose, moveToAngles, grip, getJointAngles
 from std_msgs.msg import Bool
 from tf.transformations import euler_from_quaternion, quaternion_from_euler
 import tf2_ros
-from math import pi
+from math import pi, isclose
 
 class MoveitArmClient:
     def __init__(self, init_node=False) -> None:
@@ -96,9 +94,28 @@ class MoveitArmClient:
     def send_arm_home(self):
         self.move_arm_angles(self.home_joint_angles)
 
+    
     def is_arm_in_home_pos(self):
-        return False #TODO: get_pose(), compare to home joints with tolerance
+        rospy.wait_for_service('/get_joint_angles')
+        try:
+            c = rospy.ServiceProxy('/get_joint_angles', getJointAngles)
+            response = c() # requests arm joint angles
 
+            if response.success.data: # if service doesn't fail
+                return self.are_joints_equal(response.angles, self.home_joint_angles) # compare current joint angles with home angles
+            else:
+                print(str(response.data.data) + ", unable to get current arm joints")
+                return False
+        except Exception as e:
+            print("Service called failed as: %s"%e)
+            return False
+    
+    def are_joints_equal(self, joints1, joints2, tol=.1):
+        ret = [isclose(x, y, rel_tol=tol, abs_tol=tol) for x,y in zip(joints1, joints2)]
+        print("\n")
+        print(ret)
+        print("\n")
+        return all(ret)
 
 
 

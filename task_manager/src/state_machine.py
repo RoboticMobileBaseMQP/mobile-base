@@ -81,6 +81,7 @@ class Task_Progress(smach.State):
 
         # check arm in home pos (TODO: service)
         if not service_interface.is_arm_in_home_pos():
+            print("----------ARM NOT IN HOME POS, MOVING TO HOME------------")
             userdata.home_position_out = True
             return 'move_arm'
 
