@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-from distutils.sysconfig import get_config_var
 import sys
 import rospy
 import moveit_commander
@@ -11,7 +10,6 @@ from abstract_arm.srv import moveToPose, moveToPoseResponse
 from abstract_arm.srv import moveToAngles, moveToAnglesResponse
 from abstract_arm.srv import grip, gripResponse
 from control_msgs.msg import GripperCommandActionGoal
-
 from std_msgs.msg import Bool
 
 class MoveItPlanner:

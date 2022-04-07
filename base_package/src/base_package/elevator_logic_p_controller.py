@@ -6,6 +6,7 @@ from base_package.msg import effort_list, encoder_values, jack_reset
 import threading
 import time
 import math
+from std_msgs import int32
 
 
 class ElevatorNode:
@@ -46,6 +47,16 @@ class ElevatorNode:
         # arm_controller_str = "/" + arm_namespace + "/" + arm_name + "_{0}_joint_controller/command"
 
         # self.zInsertController = rospy.Publisher(arm_controller_str.format('z'), Float64, queue_size=10)
+
+
+        #elev = rospy.Service('/elevation_request', int32, self.)
+
+        rospy.Subscriber("/base/elevator_setpoint", int32, self.update_setpoint)
+
+
+    def update_setpoint(self, msg):
+        self.set_point = msg.data
+
 
     # handles controller input for resetting all jacks and going up and down
     def joy_callback(self, msg):
