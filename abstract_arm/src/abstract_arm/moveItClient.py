@@ -93,7 +93,6 @@ class MoveitArmClient:
 
     def send_arm_home(self):
         self.move_arm_angles(self.home_joint_angles)
-
     
     def is_arm_in_home_pos(self):
         rospy.wait_for_service('/get_joint_angles')
@@ -111,11 +110,8 @@ class MoveitArmClient:
             return False
     
     def are_joints_equal(self, joints1, joints2, tol=.1):
-        ret = [isclose(x, y, rel_tol=tol, abs_tol=tol) for x,y in zip(joints1, joints2)]
-        print("\n")
-        print(ret)
-        print("\n")
-        return all(ret)
+        # compares each current joint angle to home joint angle - if all match within tolerance then arm is at home 
+        return all([isclose(x, y, rel_tol=tol, abs_tol=tol) for x,y in zip(joints1, joints2)])
 
 
 
@@ -144,18 +140,13 @@ if __name__ == "__main__":
     # print("Requesting.. ")
     # m.move_arm_EE(pose_goal)
 
-    m.is_arm_in_home_pos()
+    # m.is_arm_in_home_pos()
 
     m.move_arm_angles(m.home_joint_angles)
 
     # Panda finger
     # finger = 0.0
     # m.move_gripper(finger)
-
-
-
-
-
 
     # impossible arm position test
     # pose_goal = geometry_msgs.msg.Pose()

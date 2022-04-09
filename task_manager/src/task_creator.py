@@ -67,8 +67,8 @@ if __name__ == "__main__":
         if x == "1":
             #TODO: fill in test values
             arm_orientation.pose.orientation.w = 1.0
-            arm_orientation.pose.position.x = -0.5
-            arm_orientation.pose.position.y = -0.5
+            arm_orientation.pose.position.x = -0.1
+            arm_orientation.pose.position.y = -0.1
             arm_orientation.pose.position.z = 0.3
 
             gripper_closed = True

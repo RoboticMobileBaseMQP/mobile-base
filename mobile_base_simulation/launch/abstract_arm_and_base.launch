@@ -15,7 +15,7 @@
 
   <group if="$(eval arm == 'kortex')">
     <include file="$(find kortex_insert_description)/launch/spawn_kortex_insert.launch">
-      <arg name="start_rviz" value="false" />
+      <arg name="start_rviz" value="true" />
       <arg name="x0" value="0"/>
       <arg name="y0" value="0"/>
       <arg name="z0" value="1"/>
