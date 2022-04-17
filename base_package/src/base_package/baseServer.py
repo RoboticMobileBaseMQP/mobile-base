@@ -42,20 +42,19 @@ class baseServer:
         self.setpoint.publish(height.data)
         #reading_Cache = [None] * self.cache_length
 
-        reading_Cache = []
-        #directional_Cache = Queue(maxsize=self.cache_length)
-        
+        reading_Cache = []        
         
         bool = Bool()
         string = String()
         string.error = "" # no error
 
         last_offset_avg = self.calculateOffset(self.encoder_values)
+        start_time = time.time()
+
 
         while True:
             avg_encoder = sum(self.encoder_values)/len(self.encoder_values)
             offset_avg = self.calculateOffset(self.encoder_values)
-            start_time = time.time()
             
             if len(reading_Cache) < self.cache_length:
                 reading_Cache.append(avg_encoder)
