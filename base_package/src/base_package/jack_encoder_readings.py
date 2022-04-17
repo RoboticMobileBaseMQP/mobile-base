@@ -6,8 +6,7 @@ import sys
 import Encoder
 import rospy
 from std_msgs.msg import Int64
-from base_package.msg import effort_list, encoder_values
-# import special message type of a list of 3 int64's
+from base_package.msg import effort_list, encoder_values, jack_reset
 
 
 class JackEncoderReader:
@@ -15,6 +14,7 @@ class JackEncoderReader:
         
         if init_node:
             rospy.init_node("jack_encoder_readings", anonymous=True)
+        self.rate = rospy.Rate(10) # 10Hz
         
         self.jackEncoders = rospy.Publisher("/base/elevator_encoders", encoder_values, queue_size=10)
         # Jack Right A  = JRa
@@ -31,20 +31,15 @@ class JackEncoderReader:
 
         self.encR_zero, self.encL_zero, self.encB_zero = 0, 0, 0
 
-        self.encoder_writer = rospy.Subscriber("/base/elevator_efforts", effort_list, self.check_encoder_reset)
+        self.encoder_writer = rospy.Subscriber("/base/elevator_resets", jack_reset, self.encoder_reset)
 
-    def check_encoder_reset(self, msg):
-        if msg.Reset:
-            print("resetting zero")
-            self.encR_zero = self.encR.read()
+    def encoder_reset(self, msg):
+        if msg.reset_left:
             self.encL_zero = self.encL.read()
+        if msg.reset_back:
             self.encB_zero = self.encB.read()
-    
-    def home_config(self):
-        # TODO
-        # Read pins on limit switches to know if jack is home
-        # if limit swithc is not enabled and home config is desired, lower jacks until limit switch is true
-        return
+        if msg.reset_right:
+            self.encR_zero = self.encR.read()
         
     def main(self):
         # if home_config == True:
@@ -59,8 +54,9 @@ class JackEncoderReader:
             backJack = self.encB.read() - self.encB_zero 
             
             # rostopic publishing
-            values.Values = [int(rightJack), int(leftJack), int(backJack)]
-            self.jackEncoders.publish(values)            
+            values.Values = [int(leftJack), int(backJack), int(rightJack)]
+            self.jackEncoders.publish(values)
+            self.rate.sleep()
 
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from base_package.base_control import BaseControl
+from base_package.base_sim_control import BaseControl
 from abstract_arm.moveItClient import MoveitArmClient
 import time
 import geometry_msgs.msg

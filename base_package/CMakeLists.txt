@@ -49,14 +49,14 @@ add_message_files(
   FILES
   effort_list.msg
   encoder_values.msg
+  jack_reset.msg
 )
 
 ## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   Service1.srv
-#   Service2.srv
-# )
+add_service_files(
+  FILES
+  moveToElev.srv
+)
 
 ## Generate actions in the 'action' folder
 # add_action_files(
