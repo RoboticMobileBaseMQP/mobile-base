@@ -4,6 +4,7 @@
   <param name="arm/dof" value="7"/>
 
   <arg name="start_rviz" default="true" />
+  <arg name="remote" default="true" />
 
   <group if="$(eval arm == 'panda')">
     <!-- TODO: load panda robot descr-->
@@ -14,9 +15,8 @@
 
     <include file="$(find kortex_insert_description)/launch/host_moveit.launch" pass_all_args="true"/>
 
-    <include file="$(find kortex_insert_description)/launch/remote_kinova_driver.launch" pass_all_args="true">
-      <arg name="moveit" value="false"/> <!-- TODO: IF LAUNCHED REMOTELY SHOULD BE FALSE-->
-    </include>
+    <!-- TODO: LAUNCH REMOTELY-->
+    <include file="$(find kortex_insert_description)/launch/remote_kinova_driver.launch" pass_all_args="true" unless="$(arg remote)"/>
   </group>
 
   <!-- start moveit server -->

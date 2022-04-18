@@ -2,7 +2,7 @@
 
 import rospy
 from std_msgs.msg import Float64
-from geometry_msgs.msg import PoseStamped
+from geometry_msgs.msg import PoseStamped, Quaternion
 from task_manager.msg import task
 import time
 import sys, tty, select, termios
@@ -68,16 +68,17 @@ if __name__ == "__main__":
 
         if x == "1":
             #TODO: fill in test values
-            arm_orientation.pose.position.x = .57
-            arm_orientation.pose.position.y = 1.0
-            arm_orientation.pose.position.z = .91
+            arm_orientation.pose.position.x = .5
+            arm_orientation.pose.position.y = .5
+            arm_orientation.pose.position.z = .5
 
-            quat = quaternion_from_euler(pi/4, 0, pi/4)
+            # quat = quaternion_from_euler(pi/4, 0, pi/4)
+            # arm_orientation.pose.orientation = Quaternion(*quat)
 
-            arm_orientation.pose.orientation.w = quat[0]
-            arm_orientation.pose.orientation.x = quat[1]
-            arm_orientation.pose.orientation.y = quat[2]
-            arm_orientation.pose.orientation.z = quat[3]
+            arm_orientation.pose.orientation.w = 1
+            arm_orientation.pose.orientation.x = 0
+            arm_orientation.pose.orientation.y = 0
+            arm_orientation.pose.orientation.z = 0
 
             gripper_closed = True
             

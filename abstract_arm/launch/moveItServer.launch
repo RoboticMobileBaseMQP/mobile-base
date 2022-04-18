@@ -9,7 +9,7 @@
     </include> -->
 
     <!-- Launch the server -->
-    <group if="$(eval arm == 'kortex')">
+    <group if="$(eval arm == 'gen3')">
       <node name="kortex_moveit_server" pkg="abstract_arm" type="moveItServer.py" ns="my_gen3" output="screen" launch-prefix="bash -c 'sleep $(arg start_delay_seconds); $0 $@' "/>
     </group>
 
