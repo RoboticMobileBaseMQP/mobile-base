@@ -1,5 +1,5 @@
 <launch>
-  <arg name="arm" default="panda" /> <!-- determines which arm to launch from command line -->
+  <arg name="arm" default="gen3" /> <!-- determines which arm to launch from command line -->
   <param name="arm/name" value="$(arg arm)" /> 
   <param name="arm/dof" value="7"/>
 
