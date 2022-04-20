@@ -6,7 +6,7 @@
     <node name="limit_switches" pkg="base_package" type="limit_switches.py" output="screen" />
 
     <group if="$(eval arm == 'gen3')">
-        <include file="$(find kortex_insert_description)/launch/remote_kinova_driver.launch" pass_all_args="true" unless="$(arg remote)"/>
+        <include file="$(find kortex_insert_description)/launch/remote_kinova_driver.launch" />
     </group>
 
     <group if="$(eval arm == 'panda')">
