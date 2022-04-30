@@ -12,6 +12,8 @@ class ServiceInterface:
         self.arm_services = MoveitArmClient()
         self.t = task()
 
+        #TODO: base services
+
     def move_arm(self, task_type, orientation, gripper):
         if task_type == self.t.TASK_PICK:
             self.arm_services.move_arm_EE(orientation.pose) #NOTE: we're throwing the poseStamped header away

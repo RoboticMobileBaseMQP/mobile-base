@@ -16,5 +16,9 @@
             <arg name="use_hard_limits" value="$(arg use_hard_limits)"/>
             <arg name="prefix" value="$(arg prefix)"/> -->
         </include>
+
+        <node name="rviz" pkg="rviz" type="rviz" if="$(arg start_rviz)"/> 
     </group>
+
+    
 </launch>
