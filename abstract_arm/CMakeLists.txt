@@ -59,6 +59,9 @@ catkin_python_setup()
  add_service_files(
    FILES
    moveToPose.srv
+   moveToAngles.srv
+   grip.srv
+   getJointAngles.srv
  )
 
 ## Generate actions in the 'action' folder

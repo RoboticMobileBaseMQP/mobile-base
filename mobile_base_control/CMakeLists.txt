@@ -45,8 +45,7 @@ find_package(catkin REQUIRED)
 ## Generate messages in the 'msg' folder
 # add_message_files(
 #   FILES
-#   Message1.msg
-#   Message2.msg
+#   task.msg
 # )
 
 ## Generate services in the 'srv' folder
@@ -67,6 +66,7 @@ find_package(catkin REQUIRED)
 # generate_messages(
 #   DEPENDENCIES
 #   std_msgs  # Or other packages containing msgs
+#   geometry_msgs
 # )
 
 ################################################
