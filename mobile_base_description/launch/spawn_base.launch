@@ -22,4 +22,7 @@
     <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model mobile_base" />
 
   </group>
+
+  <!-- launch rviz-->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find mobile_base_description)/rviz/mobile_base_config.rviz" />
 </launch>
