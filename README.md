@@ -3,12 +3,14 @@
 
 Repository for the description and gazebo simulation of a Mobile Robotic Base, a project developed for the completion of the WPI Major Qualifying Project requirement. Last updated: May 2022
 
+![Robot Render](https://github.com/RoboticMobileBaseMQP/mobile-base/blob/main/docs/Robot%20Render.png?raw=true)
+
 ## Installation
 There are two types of installation necessary to communicate with the mobile base. If only working with simulation, then only the Host Computer installation needs to be followed. However, if working with the real Mobile Base, the Raspberry Pi installation will also need to be followed.
 
 ### Host Computer Installation 
 
-This project was developed using ROS as the framework of choice. Download and install ROS Noetic from here. Create a workspace using the following commands: 
+This project was developed using ROS as the framework of choice. Download and install ROS Noetic from [here](http://wiki.ros.org/noetic/Installation). Create a workspace using the following commands: 
 
 ```
 mkdir MQP_ws/src
@@ -37,7 +39,7 @@ cd kortex_arm
 git clone https://github.com/Kinovarobotics/ros_kortex.git -b noetic-devel
 ```
 
-`ros_kortex` requires additional steps to build the drivers for the gen3 - follow them here.
+`ros_kortex` requires additional steps to build the drivers for the gen3 - follow them [here](https://github.com/Kinovarobotics/ros_kortex).
 
 Our simulation also requires a little tweak to the gen3 URDF. Comment out lines 25-32 and 64-68 in `kortex_arm/ros_kortex/kortex_description/robots/kortex_robot.xacro` to unfix the robot from the world link in Gazebo.
 
@@ -59,11 +61,11 @@ Then add `raspberrypi <rpi ip address>` to /etc/hosts.
 
 ### Raspberry Pi Installation
 
-The Raspberry Pi requires a lot of setup for this project. First, install a 64bit debian “Buster” OS. We recommend downloading the image from here and using the Raspberry Pi Imager to install it. RaspiOS should now boot up when turning on the Pi.
+The Raspberry Pi requires a lot of setup for this project. First, install a 64bit debian “Buster” OS. We recommend downloading the image from [here](https://downloads.raspberrypi.org/raspios_arm64/images/raspios_arm64-2021-05-28/) and using the Raspberry Pi Imager to install it. RaspiOS should now boot up when turning on the Pi.
 
-To control the Franka Emika Panda, a fully preemptible real-time OS is required. Follow the instructions listed here. Note that you will need to use a different kernel version (we used rpi-5.10) and also a different patch version (we used 5.10.104) - pick the version closest to what’s already installed on the Pi. Make sure to follow instructions for `menuconfig` - additional details for enabling the real time preemption model can be found here. 
+To control the Franka Emika Panda, a fully preemptible real-time OS is required. Follow the instructions listed [here](https://www.instructables.com/64bit-RT-Kernel-Compilation-for-Raspberry-Pi-4B-/). Note that you will need to use a different kernel version (we used rpi-5.10) and also a different patch version (we used 5.10.104) - pick the version closest to what’s already installed on the Pi. Make sure to follow instructions for `menuconfig` - additional details for enabling the real time preemption model can be found [here](https://unix.stackexchange.com/questions/582075/trouble-selecting-fully-preemptible-kernel-real-time-when-configuring-compil). 
 
-Once the OS is patched, ROS needs to be built. Follow these instructions for installing ROS Noetic on the Raspberry Pi. 
+Once the OS is patched, ROS needs to be built. Follow [these instructions](https://varhowto.com/install-ros-noetic-raspberry-pi-4/) for installing ROS Noetic on the Raspberry Pi. 
 
 With ROS installed, the repositories can be installed. Follow the instructions for installing this repository and the kortex_arm repository above. There are 2 additional notes when building kortex_arm:
 
@@ -77,7 +79,7 @@ export ROS_MASTER_URI=<host computer IP>:11311/
 export ROS_HOSTNAME=`hostname -I | cut -f1 -d' '`
 ```
 
-One final note: the `franka_description` repository only includes the URDF information for the simulation, as we didn’t have enough time to implement it on the Pi. To actually control the Panda arm, you’ll need to clone the full repository from here and monkey it with it on the Pi. Good luck!
+One final note: the `franka_description` repository only includes the URDF information for the simulation, as we didn’t have enough time to implement it on the Pi. To actually control the Panda arm, you’ll need to clone the full repository from [here](https://github.com/frankaemika/franka_ros) and monkey it with it on the Pi. Good luck!
 
 ## Usage
 
@@ -123,4 +125,4 @@ Launches the drivers for the arm and base together. Run on the host computer.
 
 Launches the arm drivers and autonomous state machine together. This is untested and should be proceeded with caution.
 
-Picture of state machine here
+![State Machine Diagram](https://github.com/RoboticMobileBaseMQP/mobile-base/blob/main/docs/Mobile%20Base%20State%20Diagram.png?raw=true)
